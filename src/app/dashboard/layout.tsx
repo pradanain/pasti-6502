@@ -132,7 +132,7 @@ export default function DashboardLayout({
                             Pelayanan Statistik Terpadu
                         </p>
                         <p className="text-xs text-center">
-                            BPS Kabupaten Buton Selatan
+                            BPS Kabupaten Bulungan
                         </p>
                     </div>                    <div className="flex flex-col flex-grow space-y-2 p-4">
                         {!isClient && (

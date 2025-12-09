@@ -48,6 +48,11 @@ export type TempVisitorLink = $Result.DefaultSelection<Prisma.$TempVisitorLinkPa
  * 
  */
 export type Notification = $Result.DefaultSelection<Prisma.$NotificationPayload>
+/**
+ * Model Guest
+ * 
+ */
+export type Guest = $Result.DefaultSelection<Prisma.$GuestPayload>
 
 /**
  * Enums
@@ -86,6 +91,40 @@ export const QueueType: {
 
 export type QueueType = (typeof QueueType)[keyof typeof QueueType]
 
+
+export const Gender: {
+  MALE: 'MALE',
+  FEMALE: 'FEMALE'
+};
+
+export type Gender = (typeof Gender)[keyof typeof Gender]
+
+
+export const LastEducation: {
+  SD: 'SD',
+  SMP: 'SMP',
+  SMA_SMK: 'SMA_SMK',
+  D1: 'D1',
+  D2: 'D2',
+  D3: 'D3',
+  D4_S1: 'D4_S1',
+  S2: 'S2',
+  S3: 'S3',
+  LAINNYA: 'LAINNYA'
+};
+
+export type LastEducation = (typeof LastEducation)[keyof typeof LastEducation]
+
+
+export const Purpose: {
+  KONSULTASI_STATISTIK: 'KONSULTASI_STATISTIK',
+  PERPUSTAKAAN: 'PERPUSTAKAAN',
+  REKOMENDASI_STATISTIK: 'REKOMENDASI_STATISTIK',
+  LAINNYA: 'LAINNYA'
+};
+
+export type Purpose = (typeof Purpose)[keyof typeof Purpose]
+
 }
 
 export type Role = $Enums.Role
@@ -103,6 +142,18 @@ export const ServiceStatus: typeof $Enums.ServiceStatus
 export type QueueType = $Enums.QueueType
 
 export const QueueType: typeof $Enums.QueueType
+
+export type Gender = $Enums.Gender
+
+export const Gender: typeof $Enums.Gender
+
+export type LastEducation = $Enums.LastEducation
+
+export const LastEducation: typeof $Enums.LastEducation
+
+export type Purpose = $Enums.Purpose
+
+export const Purpose: typeof $Enums.Purpose
 
 /**
  * ##  Prisma Client ʲˢ
@@ -298,6 +349,16 @@ export class PrismaClient<
     * ```
     */
   get notification(): Prisma.NotificationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.guest`: Exposes CRUD operations for the **Guest** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Guests
+    * const guests = await prisma.guest.findMany()
+    * ```
+    */
+  get guest(): Prisma.GuestDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -744,7 +805,8 @@ export namespace Prisma {
     Queue: 'Queue',
     QRCode: 'QRCode',
     TempVisitorLink: 'TempVisitorLink',
-    Notification: 'Notification'
+    Notification: 'Notification',
+    Guest: 'Guest'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -763,7 +825,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "service" | "visitor" | "queue" | "qRCode" | "tempVisitorLink" | "notification"
+      modelProps: "user" | "service" | "visitor" | "queue" | "qRCode" | "tempVisitorLink" | "notification" | "guest"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1285,6 +1347,80 @@ export namespace Prisma {
           }
         }
       }
+      Guest: {
+        payload: Prisma.$GuestPayload<ExtArgs>
+        fields: Prisma.GuestFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GuestFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GuestPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GuestFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GuestPayload>
+          }
+          findFirst: {
+            args: Prisma.GuestFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GuestPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GuestFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GuestPayload>
+          }
+          findMany: {
+            args: Prisma.GuestFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GuestPayload>[]
+          }
+          create: {
+            args: Prisma.GuestCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GuestPayload>
+          }
+          createMany: {
+            args: Prisma.GuestCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GuestCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GuestPayload>[]
+          }
+          delete: {
+            args: Prisma.GuestDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GuestPayload>
+          }
+          update: {
+            args: Prisma.GuestUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GuestPayload>
+          }
+          deleteMany: {
+            args: Prisma.GuestDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GuestUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.GuestUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GuestPayload>[]
+          }
+          upsert: {
+            args: Prisma.GuestUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GuestPayload>
+          }
+          aggregate: {
+            args: Prisma.GuestAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGuest>
+          }
+          groupBy: {
+            args: Prisma.GuestGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GuestGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GuestCountArgs<ExtArgs>
+            result: $Utils.Optional<GuestCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1376,6 +1512,7 @@ export namespace Prisma {
     qRCode?: QRCodeOmit
     tempVisitorLink?: TempVisitorLinkOmit
     notification?: NotificationOmit
+    guest?: GuestOmit
   }
 
   /* Types for Logging */
@@ -1563,6 +1700,37 @@ export namespace Prisma {
    * VisitorCountOutputType without action
    */
   export type VisitorCountOutputTypeCountQueuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: QueueWhereInput
+  }
+
+
+  /**
+   * Count Type GuestCountOutputType
+   */
+
+  export type GuestCountOutputType = {
+    queues: number
+  }
+
+  export type GuestCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    queues?: boolean | GuestCountOutputTypeCountQueuesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * GuestCountOutputType without action
+   */
+  export type GuestCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GuestCountOutputType
+     */
+    select?: GuestCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * GuestCountOutputType without action
+   */
+  export type GuestCountOutputTypeCountQueuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: QueueWhereInput
   }
 
@@ -3771,16 +3939,32 @@ export namespace Prisma {
 
   export type AggregateVisitor = {
     _count: VisitorCountAggregateOutputType | null
+    _avg: VisitorAvgAggregateOutputType | null
+    _sum: VisitorSumAggregateOutputType | null
     _min: VisitorMinAggregateOutputType | null
     _max: VisitorMaxAggregateOutputType | null
+  }
+
+  export type VisitorAvgAggregateOutputType = {
+    age: number | null
+  }
+
+  export type VisitorSumAggregateOutputType = {
+    age: number | null
   }
 
   export type VisitorMinAggregateOutputType = {
     id: string | null
     name: string | null
     phone: string | null
+    address: string | null
+    age: number | null
+    gender: $Enums.Gender | null
+    lastEducation: $Enums.LastEducation | null
+    occupation: string | null
     institution: string | null
     email: string | null
+    purpose: $Enums.Purpose | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3789,8 +3973,14 @@ export namespace Prisma {
     id: string | null
     name: string | null
     phone: string | null
+    address: string | null
+    age: number | null
+    gender: $Enums.Gender | null
+    lastEducation: $Enums.LastEducation | null
+    occupation: string | null
     institution: string | null
     email: string | null
+    purpose: $Enums.Purpose | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3799,20 +3989,40 @@ export namespace Prisma {
     id: number
     name: number
     phone: number
+    address: number
+    age: number
+    gender: number
+    lastEducation: number
+    occupation: number
     institution: number
     email: number
+    purpose: number
     createdAt: number
     updatedAt: number
     _all: number
   }
 
 
+  export type VisitorAvgAggregateInputType = {
+    age?: true
+  }
+
+  export type VisitorSumAggregateInputType = {
+    age?: true
+  }
+
   export type VisitorMinAggregateInputType = {
     id?: true
     name?: true
     phone?: true
+    address?: true
+    age?: true
+    gender?: true
+    lastEducation?: true
+    occupation?: true
     institution?: true
     email?: true
+    purpose?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -3821,8 +4031,14 @@ export namespace Prisma {
     id?: true
     name?: true
     phone?: true
+    address?: true
+    age?: true
+    gender?: true
+    lastEducation?: true
+    occupation?: true
     institution?: true
     email?: true
+    purpose?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -3831,8 +4047,14 @@ export namespace Prisma {
     id?: true
     name?: true
     phone?: true
+    address?: true
+    age?: true
+    gender?: true
+    lastEducation?: true
+    occupation?: true
     institution?: true
     email?: true
+    purpose?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -3876,6 +4098,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: VisitorAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: VisitorSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: VisitorMinAggregateInputType
@@ -3906,6 +4140,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: VisitorCountAggregateInputType | true
+    _avg?: VisitorAvgAggregateInputType
+    _sum?: VisitorSumAggregateInputType
     _min?: VisitorMinAggregateInputType
     _max?: VisitorMaxAggregateInputType
   }
@@ -3914,11 +4150,19 @@ export namespace Prisma {
     id: string
     name: string
     phone: string
+    address: string | null
+    age: number | null
+    gender: $Enums.Gender | null
+    lastEducation: $Enums.LastEducation | null
+    occupation: string | null
     institution: string | null
     email: string | null
+    purpose: $Enums.Purpose | null
     createdAt: Date
     updatedAt: Date
     _count: VisitorCountAggregateOutputType | null
+    _avg: VisitorAvgAggregateOutputType | null
+    _sum: VisitorSumAggregateOutputType | null
     _min: VisitorMinAggregateOutputType | null
     _max: VisitorMaxAggregateOutputType | null
   }
@@ -3941,8 +4185,14 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     phone?: boolean
+    address?: boolean
+    age?: boolean
+    gender?: boolean
+    lastEducation?: boolean
+    occupation?: boolean
     institution?: boolean
     email?: boolean
+    purpose?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     queues?: boolean | Visitor$queuesArgs<ExtArgs>
@@ -3953,8 +4203,14 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     phone?: boolean
+    address?: boolean
+    age?: boolean
+    gender?: boolean
+    lastEducation?: boolean
+    occupation?: boolean
     institution?: boolean
     email?: boolean
+    purpose?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["visitor"]>
@@ -3963,8 +4219,14 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     phone?: boolean
+    address?: boolean
+    age?: boolean
+    gender?: boolean
+    lastEducation?: boolean
+    occupation?: boolean
     institution?: boolean
     email?: boolean
+    purpose?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["visitor"]>
@@ -3973,13 +4235,19 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     phone?: boolean
+    address?: boolean
+    age?: boolean
+    gender?: boolean
+    lastEducation?: boolean
+    occupation?: boolean
     institution?: boolean
     email?: boolean
+    purpose?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type VisitorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "phone" | "institution" | "email" | "createdAt" | "updatedAt", ExtArgs["result"]["visitor"]>
+  export type VisitorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "phone" | "address" | "age" | "gender" | "lastEducation" | "occupation" | "institution" | "email" | "purpose" | "createdAt" | "updatedAt", ExtArgs["result"]["visitor"]>
   export type VisitorInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     queues?: boolean | Visitor$queuesArgs<ExtArgs>
     _count?: boolean | VisitorCountOutputTypeDefaultArgs<ExtArgs>
@@ -3996,8 +4264,14 @@ export namespace Prisma {
       id: string
       name: string
       phone: string
+      address: string | null
+      age: number | null
+      gender: $Enums.Gender | null
+      lastEducation: $Enums.LastEducation | null
+      occupation: string | null
       institution: string | null
       email: string | null
+      purpose: $Enums.Purpose | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["visitor"]>
@@ -4427,8 +4701,14 @@ export namespace Prisma {
     readonly id: FieldRef<"Visitor", 'String'>
     readonly name: FieldRef<"Visitor", 'String'>
     readonly phone: FieldRef<"Visitor", 'String'>
+    readonly address: FieldRef<"Visitor", 'String'>
+    readonly age: FieldRef<"Visitor", 'Int'>
+    readonly gender: FieldRef<"Visitor", 'Gender'>
+    readonly lastEducation: FieldRef<"Visitor", 'LastEducation'>
+    readonly occupation: FieldRef<"Visitor", 'String'>
     readonly institution: FieldRef<"Visitor", 'String'>
     readonly email: FieldRef<"Visitor", 'String'>
+    readonly purpose: FieldRef<"Visitor", 'Purpose'>
     readonly createdAt: FieldRef<"Visitor", 'DateTime'>
     readonly updatedAt: FieldRef<"Visitor", 'DateTime'>
   }
@@ -4886,7 +5166,9 @@ export namespace Prisma {
     queueNumber: number | null
     status: $Enums.QueueStatus | null
     queueType: $Enums.QueueType | null
+    queueDate: Date | null
     visitorId: string | null
+    guestId: string | null
     serviceId: string | null
     adminId: string | null
     startTime: Date | null
@@ -4903,7 +5185,9 @@ export namespace Prisma {
     queueNumber: number | null
     status: $Enums.QueueStatus | null
     queueType: $Enums.QueueType | null
+    queueDate: Date | null
     visitorId: string | null
+    guestId: string | null
     serviceId: string | null
     adminId: string | null
     startTime: Date | null
@@ -4920,7 +5204,9 @@ export namespace Prisma {
     queueNumber: number
     status: number
     queueType: number
+    queueDate: number
     visitorId: number
+    guestId: number
     serviceId: number
     adminId: number
     startTime: number
@@ -4947,7 +5233,9 @@ export namespace Prisma {
     queueNumber?: true
     status?: true
     queueType?: true
+    queueDate?: true
     visitorId?: true
+    guestId?: true
     serviceId?: true
     adminId?: true
     startTime?: true
@@ -4964,7 +5252,9 @@ export namespace Prisma {
     queueNumber?: true
     status?: true
     queueType?: true
+    queueDate?: true
     visitorId?: true
+    guestId?: true
     serviceId?: true
     adminId?: true
     startTime?: true
@@ -4981,7 +5271,9 @@ export namespace Prisma {
     queueNumber?: true
     status?: true
     queueType?: true
+    queueDate?: true
     visitorId?: true
+    guestId?: true
     serviceId?: true
     adminId?: true
     startTime?: true
@@ -5085,7 +5377,9 @@ export namespace Prisma {
     queueNumber: number
     status: $Enums.QueueStatus
     queueType: $Enums.QueueType
+    queueDate: Date
     visitorId: string
+    guestId: string | null
     serviceId: string
     adminId: string | null
     startTime: Date | null
@@ -5121,7 +5415,9 @@ export namespace Prisma {
     queueNumber?: boolean
     status?: boolean
     queueType?: boolean
+    queueDate?: boolean
     visitorId?: boolean
+    guestId?: boolean
     serviceId?: boolean
     adminId?: boolean
     startTime?: boolean
@@ -5132,6 +5428,7 @@ export namespace Prisma {
     filledSKD?: boolean
     trackingLink?: boolean
     visitor?: boolean | VisitorDefaultArgs<ExtArgs>
+    guest?: boolean | Queue$guestArgs<ExtArgs>
     service?: boolean | ServiceDefaultArgs<ExtArgs>
     admin?: boolean | Queue$adminArgs<ExtArgs>
   }, ExtArgs["result"]["queue"]>
@@ -5141,7 +5438,9 @@ export namespace Prisma {
     queueNumber?: boolean
     status?: boolean
     queueType?: boolean
+    queueDate?: boolean
     visitorId?: boolean
+    guestId?: boolean
     serviceId?: boolean
     adminId?: boolean
     startTime?: boolean
@@ -5152,6 +5451,7 @@ export namespace Prisma {
     filledSKD?: boolean
     trackingLink?: boolean
     visitor?: boolean | VisitorDefaultArgs<ExtArgs>
+    guest?: boolean | Queue$guestArgs<ExtArgs>
     service?: boolean | ServiceDefaultArgs<ExtArgs>
     admin?: boolean | Queue$adminArgs<ExtArgs>
   }, ExtArgs["result"]["queue"]>
@@ -5161,7 +5461,9 @@ export namespace Prisma {
     queueNumber?: boolean
     status?: boolean
     queueType?: boolean
+    queueDate?: boolean
     visitorId?: boolean
+    guestId?: boolean
     serviceId?: boolean
     adminId?: boolean
     startTime?: boolean
@@ -5172,6 +5474,7 @@ export namespace Prisma {
     filledSKD?: boolean
     trackingLink?: boolean
     visitor?: boolean | VisitorDefaultArgs<ExtArgs>
+    guest?: boolean | Queue$guestArgs<ExtArgs>
     service?: boolean | ServiceDefaultArgs<ExtArgs>
     admin?: boolean | Queue$adminArgs<ExtArgs>
   }, ExtArgs["result"]["queue"]>
@@ -5181,7 +5484,9 @@ export namespace Prisma {
     queueNumber?: boolean
     status?: boolean
     queueType?: boolean
+    queueDate?: boolean
     visitorId?: boolean
+    guestId?: boolean
     serviceId?: boolean
     adminId?: boolean
     startTime?: boolean
@@ -5193,19 +5498,22 @@ export namespace Prisma {
     trackingLink?: boolean
   }
 
-  export type QueueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "queueNumber" | "status" | "queueType" | "visitorId" | "serviceId" | "adminId" | "startTime" | "endTime" | "createdAt" | "updatedAt" | "tempUuid" | "filledSKD" | "trackingLink", ExtArgs["result"]["queue"]>
+  export type QueueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "queueNumber" | "status" | "queueType" | "queueDate" | "visitorId" | "guestId" | "serviceId" | "adminId" | "startTime" | "endTime" | "createdAt" | "updatedAt" | "tempUuid" | "filledSKD" | "trackingLink", ExtArgs["result"]["queue"]>
   export type QueueInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     visitor?: boolean | VisitorDefaultArgs<ExtArgs>
+    guest?: boolean | Queue$guestArgs<ExtArgs>
     service?: boolean | ServiceDefaultArgs<ExtArgs>
     admin?: boolean | Queue$adminArgs<ExtArgs>
   }
   export type QueueIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     visitor?: boolean | VisitorDefaultArgs<ExtArgs>
+    guest?: boolean | Queue$guestArgs<ExtArgs>
     service?: boolean | ServiceDefaultArgs<ExtArgs>
     admin?: boolean | Queue$adminArgs<ExtArgs>
   }
   export type QueueIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     visitor?: boolean | VisitorDefaultArgs<ExtArgs>
+    guest?: boolean | Queue$guestArgs<ExtArgs>
     service?: boolean | ServiceDefaultArgs<ExtArgs>
     admin?: boolean | Queue$adminArgs<ExtArgs>
   }
@@ -5214,6 +5522,7 @@ export namespace Prisma {
     name: "Queue"
     objects: {
       visitor: Prisma.$VisitorPayload<ExtArgs>
+      guest: Prisma.$GuestPayload<ExtArgs> | null
       service: Prisma.$ServicePayload<ExtArgs>
       admin: Prisma.$UserPayload<ExtArgs> | null
     }
@@ -5222,7 +5531,9 @@ export namespace Prisma {
       queueNumber: number
       status: $Enums.QueueStatus
       queueType: $Enums.QueueType
+      queueDate: Date
       visitorId: string
+      guestId: string | null
       serviceId: string
       adminId: string | null
       startTime: Date | null
@@ -5627,6 +5938,7 @@ export namespace Prisma {
   export interface Prisma__QueueClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     visitor<T extends VisitorDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VisitorDefaultArgs<ExtArgs>>): Prisma__VisitorClient<$Result.GetResult<Prisma.$VisitorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    guest<T extends Queue$guestArgs<ExtArgs> = {}>(args?: Subset<T, Queue$guestArgs<ExtArgs>>): Prisma__GuestClient<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     service<T extends ServiceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ServiceDefaultArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     admin<T extends Queue$adminArgs<ExtArgs> = {}>(args?: Subset<T, Queue$adminArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
@@ -5662,7 +5974,9 @@ export namespace Prisma {
     readonly queueNumber: FieldRef<"Queue", 'Int'>
     readonly status: FieldRef<"Queue", 'QueueStatus'>
     readonly queueType: FieldRef<"Queue", 'QueueType'>
+    readonly queueDate: FieldRef<"Queue", 'DateTime'>
     readonly visitorId: FieldRef<"Queue", 'String'>
+    readonly guestId: FieldRef<"Queue", 'String'>
     readonly serviceId: FieldRef<"Queue", 'String'>
     readonly adminId: FieldRef<"Queue", 'String'>
     readonly startTime: FieldRef<"Queue", 'DateTime'>
@@ -6065,6 +6379,25 @@ export namespace Prisma {
      * Limit how many Queues to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Queue.guest
+   */
+  export type Queue$guestArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    where?: GuestWhereInput
   }
 
   /**
@@ -9225,6 +9558,1214 @@ export namespace Prisma {
 
 
   /**
+   * Model Guest
+   */
+
+  export type AggregateGuest = {
+    _count: GuestCountAggregateOutputType | null
+    _avg: GuestAvgAggregateOutputType | null
+    _sum: GuestSumAggregateOutputType | null
+    _min: GuestMinAggregateOutputType | null
+    _max: GuestMaxAggregateOutputType | null
+  }
+
+  export type GuestAvgAggregateOutputType = {
+    age: number | null
+  }
+
+  export type GuestSumAggregateOutputType = {
+    age: number | null
+  }
+
+  export type GuestMinAggregateOutputType = {
+    id: string | null
+    fullName: string | null
+    email: string | null
+    address: string | null
+    phone: string | null
+    age: number | null
+    institution: string | null
+    gender: $Enums.Gender | null
+    lastEducation: $Enums.LastEducation | null
+    occupation: string | null
+    purpose: $Enums.Purpose | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type GuestMaxAggregateOutputType = {
+    id: string | null
+    fullName: string | null
+    email: string | null
+    address: string | null
+    phone: string | null
+    age: number | null
+    institution: string | null
+    gender: $Enums.Gender | null
+    lastEducation: $Enums.LastEducation | null
+    occupation: string | null
+    purpose: $Enums.Purpose | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type GuestCountAggregateOutputType = {
+    id: number
+    fullName: number
+    email: number
+    address: number
+    phone: number
+    age: number
+    institution: number
+    gender: number
+    lastEducation: number
+    occupation: number
+    purpose: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type GuestAvgAggregateInputType = {
+    age?: true
+  }
+
+  export type GuestSumAggregateInputType = {
+    age?: true
+  }
+
+  export type GuestMinAggregateInputType = {
+    id?: true
+    fullName?: true
+    email?: true
+    address?: true
+    phone?: true
+    age?: true
+    institution?: true
+    gender?: true
+    lastEducation?: true
+    occupation?: true
+    purpose?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type GuestMaxAggregateInputType = {
+    id?: true
+    fullName?: true
+    email?: true
+    address?: true
+    phone?: true
+    age?: true
+    institution?: true
+    gender?: true
+    lastEducation?: true
+    occupation?: true
+    purpose?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type GuestCountAggregateInputType = {
+    id?: true
+    fullName?: true
+    email?: true
+    address?: true
+    phone?: true
+    age?: true
+    institution?: true
+    gender?: true
+    lastEducation?: true
+    occupation?: true
+    purpose?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type GuestAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Guest to aggregate.
+     */
+    where?: GuestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Guests to fetch.
+     */
+    orderBy?: GuestOrderByWithRelationInput | GuestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GuestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Guests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Guests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Guests
+    **/
+    _count?: true | GuestCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: GuestAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: GuestSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GuestMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GuestMaxAggregateInputType
+  }
+
+  export type GetGuestAggregateType<T extends GuestAggregateArgs> = {
+        [P in keyof T & keyof AggregateGuest]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGuest[P]>
+      : GetScalarType<T[P], AggregateGuest[P]>
+  }
+
+
+
+
+  export type GuestGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GuestWhereInput
+    orderBy?: GuestOrderByWithAggregationInput | GuestOrderByWithAggregationInput[]
+    by: GuestScalarFieldEnum[] | GuestScalarFieldEnum
+    having?: GuestScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GuestCountAggregateInputType | true
+    _avg?: GuestAvgAggregateInputType
+    _sum?: GuestSumAggregateInputType
+    _min?: GuestMinAggregateInputType
+    _max?: GuestMaxAggregateInputType
+  }
+
+  export type GuestGroupByOutputType = {
+    id: string
+    fullName: string
+    email: string | null
+    address: string | null
+    phone: string
+    age: number | null
+    institution: string | null
+    gender: $Enums.Gender | null
+    lastEducation: $Enums.LastEducation | null
+    occupation: string | null
+    purpose: $Enums.Purpose | null
+    createdAt: Date
+    updatedAt: Date
+    _count: GuestCountAggregateOutputType | null
+    _avg: GuestAvgAggregateOutputType | null
+    _sum: GuestSumAggregateOutputType | null
+    _min: GuestMinAggregateOutputType | null
+    _max: GuestMaxAggregateOutputType | null
+  }
+
+  type GetGuestGroupByPayload<T extends GuestGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GuestGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GuestGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GuestGroupByOutputType[P]>
+            : GetScalarType<T[P], GuestGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GuestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    fullName?: boolean
+    email?: boolean
+    address?: boolean
+    phone?: boolean
+    age?: boolean
+    institution?: boolean
+    gender?: boolean
+    lastEducation?: boolean
+    occupation?: boolean
+    purpose?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    queues?: boolean | Guest$queuesArgs<ExtArgs>
+    _count?: boolean | GuestCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["guest"]>
+
+  export type GuestSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    fullName?: boolean
+    email?: boolean
+    address?: boolean
+    phone?: boolean
+    age?: boolean
+    institution?: boolean
+    gender?: boolean
+    lastEducation?: boolean
+    occupation?: boolean
+    purpose?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["guest"]>
+
+  export type GuestSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    fullName?: boolean
+    email?: boolean
+    address?: boolean
+    phone?: boolean
+    age?: boolean
+    institution?: boolean
+    gender?: boolean
+    lastEducation?: boolean
+    occupation?: boolean
+    purpose?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["guest"]>
+
+  export type GuestSelectScalar = {
+    id?: boolean
+    fullName?: boolean
+    email?: boolean
+    address?: boolean
+    phone?: boolean
+    age?: boolean
+    institution?: boolean
+    gender?: boolean
+    lastEducation?: boolean
+    occupation?: boolean
+    purpose?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type GuestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "fullName" | "email" | "address" | "phone" | "age" | "institution" | "gender" | "lastEducation" | "occupation" | "purpose" | "createdAt" | "updatedAt", ExtArgs["result"]["guest"]>
+  export type GuestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    queues?: boolean | Guest$queuesArgs<ExtArgs>
+    _count?: boolean | GuestCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type GuestIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type GuestIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $GuestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Guest"
+    objects: {
+      queues: Prisma.$QueuePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      fullName: string
+      email: string | null
+      address: string | null
+      phone: string
+      age: number | null
+      institution: string | null
+      gender: $Enums.Gender | null
+      lastEducation: $Enums.LastEducation | null
+      occupation: string | null
+      purpose: $Enums.Purpose | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["guest"]>
+    composites: {}
+  }
+
+  type GuestGetPayload<S extends boolean | null | undefined | GuestDefaultArgs> = $Result.GetResult<Prisma.$GuestPayload, S>
+
+  type GuestCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GuestFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GuestCountAggregateInputType | true
+    }
+
+  export interface GuestDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Guest'], meta: { name: 'Guest' } }
+    /**
+     * Find zero or one Guest that matches the filter.
+     * @param {GuestFindUniqueArgs} args - Arguments to find a Guest
+     * @example
+     * // Get one Guest
+     * const guest = await prisma.guest.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GuestFindUniqueArgs>(args: SelectSubset<T, GuestFindUniqueArgs<ExtArgs>>): Prisma__GuestClient<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Guest that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GuestFindUniqueOrThrowArgs} args - Arguments to find a Guest
+     * @example
+     * // Get one Guest
+     * const guest = await prisma.guest.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GuestFindUniqueOrThrowArgs>(args: SelectSubset<T, GuestFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GuestClient<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Guest that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GuestFindFirstArgs} args - Arguments to find a Guest
+     * @example
+     * // Get one Guest
+     * const guest = await prisma.guest.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GuestFindFirstArgs>(args?: SelectSubset<T, GuestFindFirstArgs<ExtArgs>>): Prisma__GuestClient<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Guest that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GuestFindFirstOrThrowArgs} args - Arguments to find a Guest
+     * @example
+     * // Get one Guest
+     * const guest = await prisma.guest.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GuestFindFirstOrThrowArgs>(args?: SelectSubset<T, GuestFindFirstOrThrowArgs<ExtArgs>>): Prisma__GuestClient<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Guests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GuestFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Guests
+     * const guests = await prisma.guest.findMany()
+     * 
+     * // Get first 10 Guests
+     * const guests = await prisma.guest.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const guestWithIdOnly = await prisma.guest.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GuestFindManyArgs>(args?: SelectSubset<T, GuestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Guest.
+     * @param {GuestCreateArgs} args - Arguments to create a Guest.
+     * @example
+     * // Create one Guest
+     * const Guest = await prisma.guest.create({
+     *   data: {
+     *     // ... data to create a Guest
+     *   }
+     * })
+     * 
+     */
+    create<T extends GuestCreateArgs>(args: SelectSubset<T, GuestCreateArgs<ExtArgs>>): Prisma__GuestClient<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Guests.
+     * @param {GuestCreateManyArgs} args - Arguments to create many Guests.
+     * @example
+     * // Create many Guests
+     * const guest = await prisma.guest.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GuestCreateManyArgs>(args?: SelectSubset<T, GuestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Guests and returns the data saved in the database.
+     * @param {GuestCreateManyAndReturnArgs} args - Arguments to create many Guests.
+     * @example
+     * // Create many Guests
+     * const guest = await prisma.guest.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Guests and only return the `id`
+     * const guestWithIdOnly = await prisma.guest.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GuestCreateManyAndReturnArgs>(args?: SelectSubset<T, GuestCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Guest.
+     * @param {GuestDeleteArgs} args - Arguments to delete one Guest.
+     * @example
+     * // Delete one Guest
+     * const Guest = await prisma.guest.delete({
+     *   where: {
+     *     // ... filter to delete one Guest
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GuestDeleteArgs>(args: SelectSubset<T, GuestDeleteArgs<ExtArgs>>): Prisma__GuestClient<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Guest.
+     * @param {GuestUpdateArgs} args - Arguments to update one Guest.
+     * @example
+     * // Update one Guest
+     * const guest = await prisma.guest.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GuestUpdateArgs>(args: SelectSubset<T, GuestUpdateArgs<ExtArgs>>): Prisma__GuestClient<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Guests.
+     * @param {GuestDeleteManyArgs} args - Arguments to filter Guests to delete.
+     * @example
+     * // Delete a few Guests
+     * const { count } = await prisma.guest.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GuestDeleteManyArgs>(args?: SelectSubset<T, GuestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Guests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GuestUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Guests
+     * const guest = await prisma.guest.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GuestUpdateManyArgs>(args: SelectSubset<T, GuestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Guests and returns the data updated in the database.
+     * @param {GuestUpdateManyAndReturnArgs} args - Arguments to update many Guests.
+     * @example
+     * // Update many Guests
+     * const guest = await prisma.guest.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Guests and only return the `id`
+     * const guestWithIdOnly = await prisma.guest.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends GuestUpdateManyAndReturnArgs>(args: SelectSubset<T, GuestUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Guest.
+     * @param {GuestUpsertArgs} args - Arguments to update or create a Guest.
+     * @example
+     * // Update or create a Guest
+     * const guest = await prisma.guest.upsert({
+     *   create: {
+     *     // ... data to create a Guest
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Guest we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GuestUpsertArgs>(args: SelectSubset<T, GuestUpsertArgs<ExtArgs>>): Prisma__GuestClient<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Guests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GuestCountArgs} args - Arguments to filter Guests to count.
+     * @example
+     * // Count the number of Guests
+     * const count = await prisma.guest.count({
+     *   where: {
+     *     // ... the filter for the Guests we want to count
+     *   }
+     * })
+    **/
+    count<T extends GuestCountArgs>(
+      args?: Subset<T, GuestCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GuestCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Guest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GuestAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GuestAggregateArgs>(args: Subset<T, GuestAggregateArgs>): Prisma.PrismaPromise<GetGuestAggregateType<T>>
+
+    /**
+     * Group by Guest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GuestGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GuestGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GuestGroupByArgs['orderBy'] }
+        : { orderBy?: GuestGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GuestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGuestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Guest model
+   */
+  readonly fields: GuestFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Guest.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GuestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    queues<T extends Guest$queuesArgs<ExtArgs> = {}>(args?: Subset<T, Guest$queuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QueuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Guest model
+   */
+  interface GuestFieldRefs {
+    readonly id: FieldRef<"Guest", 'String'>
+    readonly fullName: FieldRef<"Guest", 'String'>
+    readonly email: FieldRef<"Guest", 'String'>
+    readonly address: FieldRef<"Guest", 'String'>
+    readonly phone: FieldRef<"Guest", 'String'>
+    readonly age: FieldRef<"Guest", 'Int'>
+    readonly institution: FieldRef<"Guest", 'String'>
+    readonly gender: FieldRef<"Guest", 'Gender'>
+    readonly lastEducation: FieldRef<"Guest", 'LastEducation'>
+    readonly occupation: FieldRef<"Guest", 'String'>
+    readonly purpose: FieldRef<"Guest", 'Purpose'>
+    readonly createdAt: FieldRef<"Guest", 'DateTime'>
+    readonly updatedAt: FieldRef<"Guest", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Guest findUnique
+   */
+  export type GuestFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
+     * Filter, which Guest to fetch.
+     */
+    where: GuestWhereUniqueInput
+  }
+
+  /**
+   * Guest findUniqueOrThrow
+   */
+  export type GuestFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
+     * Filter, which Guest to fetch.
+     */
+    where: GuestWhereUniqueInput
+  }
+
+  /**
+   * Guest findFirst
+   */
+  export type GuestFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
+     * Filter, which Guest to fetch.
+     */
+    where?: GuestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Guests to fetch.
+     */
+    orderBy?: GuestOrderByWithRelationInput | GuestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Guests.
+     */
+    cursor?: GuestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Guests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Guests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Guests.
+     */
+    distinct?: GuestScalarFieldEnum | GuestScalarFieldEnum[]
+  }
+
+  /**
+   * Guest findFirstOrThrow
+   */
+  export type GuestFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
+     * Filter, which Guest to fetch.
+     */
+    where?: GuestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Guests to fetch.
+     */
+    orderBy?: GuestOrderByWithRelationInput | GuestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Guests.
+     */
+    cursor?: GuestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Guests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Guests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Guests.
+     */
+    distinct?: GuestScalarFieldEnum | GuestScalarFieldEnum[]
+  }
+
+  /**
+   * Guest findMany
+   */
+  export type GuestFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
+     * Filter, which Guests to fetch.
+     */
+    where?: GuestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Guests to fetch.
+     */
+    orderBy?: GuestOrderByWithRelationInput | GuestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Guests.
+     */
+    cursor?: GuestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Guests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Guests.
+     */
+    skip?: number
+    distinct?: GuestScalarFieldEnum | GuestScalarFieldEnum[]
+  }
+
+  /**
+   * Guest create
+   */
+  export type GuestCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Guest.
+     */
+    data: XOR<GuestCreateInput, GuestUncheckedCreateInput>
+  }
+
+  /**
+   * Guest createMany
+   */
+  export type GuestCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Guests.
+     */
+    data: GuestCreateManyInput | GuestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Guest createManyAndReturn
+   */
+  export type GuestCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * The data used to create many Guests.
+     */
+    data: GuestCreateManyInput | GuestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Guest update
+   */
+  export type GuestUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Guest.
+     */
+    data: XOR<GuestUpdateInput, GuestUncheckedUpdateInput>
+    /**
+     * Choose, which Guest to update.
+     */
+    where: GuestWhereUniqueInput
+  }
+
+  /**
+   * Guest updateMany
+   */
+  export type GuestUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Guests.
+     */
+    data: XOR<GuestUpdateManyMutationInput, GuestUncheckedUpdateManyInput>
+    /**
+     * Filter which Guests to update
+     */
+    where?: GuestWhereInput
+    /**
+     * Limit how many Guests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Guest updateManyAndReturn
+   */
+  export type GuestUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * The data used to update Guests.
+     */
+    data: XOR<GuestUpdateManyMutationInput, GuestUncheckedUpdateManyInput>
+    /**
+     * Filter which Guests to update
+     */
+    where?: GuestWhereInput
+    /**
+     * Limit how many Guests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Guest upsert
+   */
+  export type GuestUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Guest to update in case it exists.
+     */
+    where: GuestWhereUniqueInput
+    /**
+     * In case the Guest found by the `where` argument doesn't exist, create a new Guest with this data.
+     */
+    create: XOR<GuestCreateInput, GuestUncheckedCreateInput>
+    /**
+     * In case the Guest was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GuestUpdateInput, GuestUncheckedUpdateInput>
+  }
+
+  /**
+   * Guest delete
+   */
+  export type GuestDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
+     * Filter which Guest to delete.
+     */
+    where: GuestWhereUniqueInput
+  }
+
+  /**
+   * Guest deleteMany
+   */
+  export type GuestDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Guests to delete
+     */
+    where?: GuestWhereInput
+    /**
+     * Limit how many Guests to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Guest.queues
+   */
+  export type Guest$queuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Queue
+     */
+    select?: QueueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Queue
+     */
+    omit?: QueueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QueueInclude<ExtArgs> | null
+    where?: QueueWhereInput
+    orderBy?: QueueOrderByWithRelationInput | QueueOrderByWithRelationInput[]
+    cursor?: QueueWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: QueueScalarFieldEnum | QueueScalarFieldEnum[]
+  }
+
+  /**
+   * Guest without action
+   */
+  export type GuestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -9266,8 +10807,14 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     phone: 'phone',
+    address: 'address',
+    age: 'age',
+    gender: 'gender',
+    lastEducation: 'lastEducation',
+    occupation: 'occupation',
     institution: 'institution',
     email: 'email',
+    purpose: 'purpose',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -9280,7 +10827,9 @@ export namespace Prisma {
     queueNumber: 'queueNumber',
     status: 'status',
     queueType: 'queueType',
+    queueDate: 'queueDate',
     visitorId: 'visitorId',
+    guestId: 'guestId',
     serviceId: 'serviceId',
     adminId: 'adminId',
     startTime: 'startTime',
@@ -9330,6 +10879,25 @@ export namespace Prisma {
   };
 
   export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+  export const GuestScalarFieldEnum: {
+    id: 'id',
+    fullName: 'fullName',
+    email: 'email',
+    address: 'address',
+    phone: 'phone',
+    age: 'age',
+    institution: 'institution',
+    gender: 'gender',
+    lastEducation: 'lastEducation',
+    occupation: 'occupation',
+    purpose: 'purpose',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type GuestScalarFieldEnum = (typeof GuestScalarFieldEnum)[keyof typeof GuestScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -9428,6 +10996,48 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Gender'
+   */
+  export type EnumGenderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Gender'>
+    
+
+
+  /**
+   * Reference to a field of type 'Gender[]'
+   */
+  export type ListEnumGenderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Gender[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'LastEducation'
+   */
+  export type EnumLastEducationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LastEducation'>
+    
+
+
+  /**
+   * Reference to a field of type 'LastEducation[]'
+   */
+  export type ListEnumLastEducationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LastEducation[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Purpose'
+   */
+  export type EnumPurposeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Purpose'>
+    
+
+
+  /**
+   * Reference to a field of type 'Purpose[]'
+   */
+  export type ListEnumPurposeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Purpose[]'>
     
 
 
@@ -9613,8 +11223,14 @@ export namespace Prisma {
     id?: StringFilter<"Visitor"> | string
     name?: StringFilter<"Visitor"> | string
     phone?: StringFilter<"Visitor"> | string
+    address?: StringNullableFilter<"Visitor"> | string | null
+    age?: IntNullableFilter<"Visitor"> | number | null
+    gender?: EnumGenderNullableFilter<"Visitor"> | $Enums.Gender | null
+    lastEducation?: EnumLastEducationNullableFilter<"Visitor"> | $Enums.LastEducation | null
+    occupation?: StringNullableFilter<"Visitor"> | string | null
     institution?: StringNullableFilter<"Visitor"> | string | null
     email?: StringNullableFilter<"Visitor"> | string | null
+    purpose?: EnumPurposeNullableFilter<"Visitor"> | $Enums.Purpose | null
     createdAt?: DateTimeFilter<"Visitor"> | Date | string
     updatedAt?: DateTimeFilter<"Visitor"> | Date | string
     queues?: QueueListRelationFilter
@@ -9624,8 +11240,14 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     phone?: SortOrder
+    address?: SortOrderInput | SortOrder
+    age?: SortOrderInput | SortOrder
+    gender?: SortOrderInput | SortOrder
+    lastEducation?: SortOrderInput | SortOrder
+    occupation?: SortOrderInput | SortOrder
     institution?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
+    purpose?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     queues?: QueueOrderByRelationAggregateInput
@@ -9638,8 +11260,14 @@ export namespace Prisma {
     NOT?: VisitorWhereInput | VisitorWhereInput[]
     name?: StringFilter<"Visitor"> | string
     phone?: StringFilter<"Visitor"> | string
+    address?: StringNullableFilter<"Visitor"> | string | null
+    age?: IntNullableFilter<"Visitor"> | number | null
+    gender?: EnumGenderNullableFilter<"Visitor"> | $Enums.Gender | null
+    lastEducation?: EnumLastEducationNullableFilter<"Visitor"> | $Enums.LastEducation | null
+    occupation?: StringNullableFilter<"Visitor"> | string | null
     institution?: StringNullableFilter<"Visitor"> | string | null
     email?: StringNullableFilter<"Visitor"> | string | null
+    purpose?: EnumPurposeNullableFilter<"Visitor"> | $Enums.Purpose | null
     createdAt?: DateTimeFilter<"Visitor"> | Date | string
     updatedAt?: DateTimeFilter<"Visitor"> | Date | string
     queues?: QueueListRelationFilter
@@ -9649,13 +11277,21 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     phone?: SortOrder
+    address?: SortOrderInput | SortOrder
+    age?: SortOrderInput | SortOrder
+    gender?: SortOrderInput | SortOrder
+    lastEducation?: SortOrderInput | SortOrder
+    occupation?: SortOrderInput | SortOrder
     institution?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
+    purpose?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: VisitorCountOrderByAggregateInput
+    _avg?: VisitorAvgOrderByAggregateInput
     _max?: VisitorMaxOrderByAggregateInput
     _min?: VisitorMinOrderByAggregateInput
+    _sum?: VisitorSumOrderByAggregateInput
   }
 
   export type VisitorScalarWhereWithAggregatesInput = {
@@ -9665,8 +11301,14 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Visitor"> | string
     name?: StringWithAggregatesFilter<"Visitor"> | string
     phone?: StringWithAggregatesFilter<"Visitor"> | string
+    address?: StringNullableWithAggregatesFilter<"Visitor"> | string | null
+    age?: IntNullableWithAggregatesFilter<"Visitor"> | number | null
+    gender?: EnumGenderNullableWithAggregatesFilter<"Visitor"> | $Enums.Gender | null
+    lastEducation?: EnumLastEducationNullableWithAggregatesFilter<"Visitor"> | $Enums.LastEducation | null
+    occupation?: StringNullableWithAggregatesFilter<"Visitor"> | string | null
     institution?: StringNullableWithAggregatesFilter<"Visitor"> | string | null
     email?: StringNullableWithAggregatesFilter<"Visitor"> | string | null
+    purpose?: EnumPurposeNullableWithAggregatesFilter<"Visitor"> | $Enums.Purpose | null
     createdAt?: DateTimeWithAggregatesFilter<"Visitor"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Visitor"> | Date | string
   }
@@ -9679,7 +11321,9 @@ export namespace Prisma {
     queueNumber?: IntFilter<"Queue"> | number
     status?: EnumQueueStatusFilter<"Queue"> | $Enums.QueueStatus
     queueType?: EnumQueueTypeFilter<"Queue"> | $Enums.QueueType
+    queueDate?: DateTimeFilter<"Queue"> | Date | string
     visitorId?: StringFilter<"Queue"> | string
+    guestId?: StringNullableFilter<"Queue"> | string | null
     serviceId?: StringFilter<"Queue"> | string
     adminId?: StringNullableFilter<"Queue"> | string | null
     startTime?: DateTimeNullableFilter<"Queue"> | Date | string | null
@@ -9690,6 +11334,7 @@ export namespace Prisma {
     filledSKD?: BoolFilter<"Queue"> | boolean
     trackingLink?: StringNullableFilter<"Queue"> | string | null
     visitor?: XOR<VisitorScalarRelationFilter, VisitorWhereInput>
+    guest?: XOR<GuestNullableScalarRelationFilter, GuestWhereInput> | null
     service?: XOR<ServiceScalarRelationFilter, ServiceWhereInput>
     admin?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }
@@ -9699,7 +11344,9 @@ export namespace Prisma {
     queueNumber?: SortOrder
     status?: SortOrder
     queueType?: SortOrder
+    queueDate?: SortOrder
     visitorId?: SortOrder
+    guestId?: SortOrderInput | SortOrder
     serviceId?: SortOrder
     adminId?: SortOrderInput | SortOrder
     startTime?: SortOrderInput | SortOrder
@@ -9710,6 +11357,7 @@ export namespace Prisma {
     filledSKD?: SortOrder
     trackingLink?: SortOrderInput | SortOrder
     visitor?: VisitorOrderByWithRelationInput
+    guest?: GuestOrderByWithRelationInput
     service?: ServiceOrderByWithRelationInput
     admin?: UserOrderByWithRelationInput
   }
@@ -9718,13 +11366,16 @@ export namespace Prisma {
     id?: string
     tempUuid?: string
     trackingLink?: string
+    queueDate_serviceId_queueNumber?: QueueQueueDateServiceIdQueueNumberCompoundUniqueInput
     AND?: QueueWhereInput | QueueWhereInput[]
     OR?: QueueWhereInput[]
     NOT?: QueueWhereInput | QueueWhereInput[]
     queueNumber?: IntFilter<"Queue"> | number
     status?: EnumQueueStatusFilter<"Queue"> | $Enums.QueueStatus
     queueType?: EnumQueueTypeFilter<"Queue"> | $Enums.QueueType
+    queueDate?: DateTimeFilter<"Queue"> | Date | string
     visitorId?: StringFilter<"Queue"> | string
+    guestId?: StringNullableFilter<"Queue"> | string | null
     serviceId?: StringFilter<"Queue"> | string
     adminId?: StringNullableFilter<"Queue"> | string | null
     startTime?: DateTimeNullableFilter<"Queue"> | Date | string | null
@@ -9733,16 +11384,19 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Queue"> | Date | string
     filledSKD?: BoolFilter<"Queue"> | boolean
     visitor?: XOR<VisitorScalarRelationFilter, VisitorWhereInput>
+    guest?: XOR<GuestNullableScalarRelationFilter, GuestWhereInput> | null
     service?: XOR<ServiceScalarRelationFilter, ServiceWhereInput>
     admin?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-  }, "id" | "tempUuid" | "trackingLink">
+  }, "id" | "tempUuid" | "trackingLink" | "queueDate_serviceId_queueNumber">
 
   export type QueueOrderByWithAggregationInput = {
     id?: SortOrder
     queueNumber?: SortOrder
     status?: SortOrder
     queueType?: SortOrder
+    queueDate?: SortOrder
     visitorId?: SortOrder
+    guestId?: SortOrderInput | SortOrder
     serviceId?: SortOrder
     adminId?: SortOrderInput | SortOrder
     startTime?: SortOrderInput | SortOrder
@@ -9767,7 +11421,9 @@ export namespace Prisma {
     queueNumber?: IntWithAggregatesFilter<"Queue"> | number
     status?: EnumQueueStatusWithAggregatesFilter<"Queue"> | $Enums.QueueStatus
     queueType?: EnumQueueTypeWithAggregatesFilter<"Queue"> | $Enums.QueueType
+    queueDate?: DateTimeWithAggregatesFilter<"Queue"> | Date | string
     visitorId?: StringWithAggregatesFilter<"Queue"> | string
+    guestId?: StringNullableWithAggregatesFilter<"Queue"> | string | null
     serviceId?: StringWithAggregatesFilter<"Queue"> | string
     adminId?: StringNullableWithAggregatesFilter<"Queue"> | string | null
     startTime?: DateTimeNullableWithAggregatesFilter<"Queue"> | Date | string | null
@@ -9958,6 +11614,103 @@ export namespace Prisma {
     userId?: StringNullableWithAggregatesFilter<"Notification"> | string | null
   }
 
+  export type GuestWhereInput = {
+    AND?: GuestWhereInput | GuestWhereInput[]
+    OR?: GuestWhereInput[]
+    NOT?: GuestWhereInput | GuestWhereInput[]
+    id?: StringFilter<"Guest"> | string
+    fullName?: StringFilter<"Guest"> | string
+    email?: StringNullableFilter<"Guest"> | string | null
+    address?: StringNullableFilter<"Guest"> | string | null
+    phone?: StringFilter<"Guest"> | string
+    age?: IntNullableFilter<"Guest"> | number | null
+    institution?: StringNullableFilter<"Guest"> | string | null
+    gender?: EnumGenderNullableFilter<"Guest"> | $Enums.Gender | null
+    lastEducation?: EnumLastEducationNullableFilter<"Guest"> | $Enums.LastEducation | null
+    occupation?: StringNullableFilter<"Guest"> | string | null
+    purpose?: EnumPurposeNullableFilter<"Guest"> | $Enums.Purpose | null
+    createdAt?: DateTimeFilter<"Guest"> | Date | string
+    updatedAt?: DateTimeFilter<"Guest"> | Date | string
+    queues?: QueueListRelationFilter
+  }
+
+  export type GuestOrderByWithRelationInput = {
+    id?: SortOrder
+    fullName?: SortOrder
+    email?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    phone?: SortOrder
+    age?: SortOrderInput | SortOrder
+    institution?: SortOrderInput | SortOrder
+    gender?: SortOrderInput | SortOrder
+    lastEducation?: SortOrderInput | SortOrder
+    occupation?: SortOrderInput | SortOrder
+    purpose?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    queues?: QueueOrderByRelationAggregateInput
+  }
+
+  export type GuestWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: GuestWhereInput | GuestWhereInput[]
+    OR?: GuestWhereInput[]
+    NOT?: GuestWhereInput | GuestWhereInput[]
+    fullName?: StringFilter<"Guest"> | string
+    email?: StringNullableFilter<"Guest"> | string | null
+    address?: StringNullableFilter<"Guest"> | string | null
+    phone?: StringFilter<"Guest"> | string
+    age?: IntNullableFilter<"Guest"> | number | null
+    institution?: StringNullableFilter<"Guest"> | string | null
+    gender?: EnumGenderNullableFilter<"Guest"> | $Enums.Gender | null
+    lastEducation?: EnumLastEducationNullableFilter<"Guest"> | $Enums.LastEducation | null
+    occupation?: StringNullableFilter<"Guest"> | string | null
+    purpose?: EnumPurposeNullableFilter<"Guest"> | $Enums.Purpose | null
+    createdAt?: DateTimeFilter<"Guest"> | Date | string
+    updatedAt?: DateTimeFilter<"Guest"> | Date | string
+    queues?: QueueListRelationFilter
+  }, "id">
+
+  export type GuestOrderByWithAggregationInput = {
+    id?: SortOrder
+    fullName?: SortOrder
+    email?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    phone?: SortOrder
+    age?: SortOrderInput | SortOrder
+    institution?: SortOrderInput | SortOrder
+    gender?: SortOrderInput | SortOrder
+    lastEducation?: SortOrderInput | SortOrder
+    occupation?: SortOrderInput | SortOrder
+    purpose?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: GuestCountOrderByAggregateInput
+    _avg?: GuestAvgOrderByAggregateInput
+    _max?: GuestMaxOrderByAggregateInput
+    _min?: GuestMinOrderByAggregateInput
+    _sum?: GuestSumOrderByAggregateInput
+  }
+
+  export type GuestScalarWhereWithAggregatesInput = {
+    AND?: GuestScalarWhereWithAggregatesInput | GuestScalarWhereWithAggregatesInput[]
+    OR?: GuestScalarWhereWithAggregatesInput[]
+    NOT?: GuestScalarWhereWithAggregatesInput | GuestScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Guest"> | string
+    fullName?: StringWithAggregatesFilter<"Guest"> | string
+    email?: StringNullableWithAggregatesFilter<"Guest"> | string | null
+    address?: StringNullableWithAggregatesFilter<"Guest"> | string | null
+    phone?: StringWithAggregatesFilter<"Guest"> | string
+    age?: IntNullableWithAggregatesFilter<"Guest"> | number | null
+    institution?: StringNullableWithAggregatesFilter<"Guest"> | string | null
+    gender?: EnumGenderNullableWithAggregatesFilter<"Guest"> | $Enums.Gender | null
+    lastEducation?: EnumLastEducationNullableWithAggregatesFilter<"Guest"> | $Enums.LastEducation | null
+    occupation?: StringNullableWithAggregatesFilter<"Guest"> | string | null
+    purpose?: EnumPurposeNullableWithAggregatesFilter<"Guest"> | $Enums.Purpose | null
+    createdAt?: DateTimeWithAggregatesFilter<"Guest"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Guest"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     username: string
@@ -10100,8 +11853,14 @@ export namespace Prisma {
     id?: string
     name: string
     phone: string
+    address?: string | null
+    age?: number | null
+    gender?: $Enums.Gender | null
+    lastEducation?: $Enums.LastEducation | null
+    occupation?: string | null
     institution?: string | null
     email?: string | null
+    purpose?: $Enums.Purpose | null
     createdAt?: Date | string
     updatedAt?: Date | string
     queues?: QueueCreateNestedManyWithoutVisitorInput
@@ -10111,8 +11870,14 @@ export namespace Prisma {
     id?: string
     name: string
     phone: string
+    address?: string | null
+    age?: number | null
+    gender?: $Enums.Gender | null
+    lastEducation?: $Enums.LastEducation | null
+    occupation?: string | null
     institution?: string | null
     email?: string | null
+    purpose?: $Enums.Purpose | null
     createdAt?: Date | string
     updatedAt?: Date | string
     queues?: QueueUncheckedCreateNestedManyWithoutVisitorInput
@@ -10122,8 +11887,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    lastEducation?: NullableEnumLastEducationFieldUpdateOperationsInput | $Enums.LastEducation | null
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
     institution?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    purpose?: NullableEnumPurposeFieldUpdateOperationsInput | $Enums.Purpose | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     queues?: QueueUpdateManyWithoutVisitorNestedInput
@@ -10133,8 +11904,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    lastEducation?: NullableEnumLastEducationFieldUpdateOperationsInput | $Enums.LastEducation | null
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
     institution?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    purpose?: NullableEnumPurposeFieldUpdateOperationsInput | $Enums.Purpose | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     queues?: QueueUncheckedUpdateManyWithoutVisitorNestedInput
@@ -10144,8 +11921,14 @@ export namespace Prisma {
     id?: string
     name: string
     phone: string
+    address?: string | null
+    age?: number | null
+    gender?: $Enums.Gender | null
+    lastEducation?: $Enums.LastEducation | null
+    occupation?: string | null
     institution?: string | null
     email?: string | null
+    purpose?: $Enums.Purpose | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -10154,8 +11937,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    lastEducation?: NullableEnumLastEducationFieldUpdateOperationsInput | $Enums.LastEducation | null
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
     institution?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    purpose?: NullableEnumPurposeFieldUpdateOperationsInput | $Enums.Purpose | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -10164,8 +11953,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    lastEducation?: NullableEnumLastEducationFieldUpdateOperationsInput | $Enums.LastEducation | null
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
     institution?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    purpose?: NullableEnumPurposeFieldUpdateOperationsInput | $Enums.Purpose | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -10175,6 +11970,7 @@ export namespace Prisma {
     queueNumber: number
     status?: $Enums.QueueStatus
     queueType?: $Enums.QueueType
+    queueDate?: Date | string
     startTime?: Date | string | null
     endTime?: Date | string | null
     createdAt?: Date | string
@@ -10183,6 +11979,7 @@ export namespace Prisma {
     filledSKD?: boolean
     trackingLink?: string | null
     visitor: VisitorCreateNestedOneWithoutQueuesInput
+    guest?: GuestCreateNestedOneWithoutQueuesInput
     service: ServiceCreateNestedOneWithoutQueuesInput
     admin?: UserCreateNestedOneWithoutQueuesInput
   }
@@ -10192,7 +11989,9 @@ export namespace Prisma {
     queueNumber: number
     status?: $Enums.QueueStatus
     queueType?: $Enums.QueueType
+    queueDate?: Date | string
     visitorId: string
+    guestId?: string | null
     serviceId: string
     adminId?: string | null
     startTime?: Date | string | null
@@ -10209,6 +12008,7 @@ export namespace Prisma {
     queueNumber?: IntFieldUpdateOperationsInput | number
     status?: EnumQueueStatusFieldUpdateOperationsInput | $Enums.QueueStatus
     queueType?: EnumQueueTypeFieldUpdateOperationsInput | $Enums.QueueType
+    queueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     startTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10217,6 +12017,7 @@ export namespace Prisma {
     filledSKD?: BoolFieldUpdateOperationsInput | boolean
     trackingLink?: NullableStringFieldUpdateOperationsInput | string | null
     visitor?: VisitorUpdateOneRequiredWithoutQueuesNestedInput
+    guest?: GuestUpdateOneWithoutQueuesNestedInput
     service?: ServiceUpdateOneRequiredWithoutQueuesNestedInput
     admin?: UserUpdateOneWithoutQueuesNestedInput
   }
@@ -10226,7 +12027,9 @@ export namespace Prisma {
     queueNumber?: IntFieldUpdateOperationsInput | number
     status?: EnumQueueStatusFieldUpdateOperationsInput | $Enums.QueueStatus
     queueType?: EnumQueueTypeFieldUpdateOperationsInput | $Enums.QueueType
+    queueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     visitorId?: StringFieldUpdateOperationsInput | string
+    guestId?: NullableStringFieldUpdateOperationsInput | string | null
     serviceId?: StringFieldUpdateOperationsInput | string
     adminId?: NullableStringFieldUpdateOperationsInput | string | null
     startTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10243,7 +12046,9 @@ export namespace Prisma {
     queueNumber: number
     status?: $Enums.QueueStatus
     queueType?: $Enums.QueueType
+    queueDate?: Date | string
     visitorId: string
+    guestId?: string | null
     serviceId: string
     adminId?: string | null
     startTime?: Date | string | null
@@ -10260,6 +12065,7 @@ export namespace Prisma {
     queueNumber?: IntFieldUpdateOperationsInput | number
     status?: EnumQueueStatusFieldUpdateOperationsInput | $Enums.QueueStatus
     queueType?: EnumQueueTypeFieldUpdateOperationsInput | $Enums.QueueType
+    queueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     startTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10274,7 +12080,9 @@ export namespace Prisma {
     queueNumber?: IntFieldUpdateOperationsInput | number
     status?: EnumQueueStatusFieldUpdateOperationsInput | $Enums.QueueStatus
     queueType?: EnumQueueTypeFieldUpdateOperationsInput | $Enums.QueueType
+    queueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     visitorId?: StringFieldUpdateOperationsInput | string
+    guestId?: NullableStringFieldUpdateOperationsInput | string | null
     serviceId?: StringFieldUpdateOperationsInput | string
     adminId?: NullableStringFieldUpdateOperationsInput | string | null
     startTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10481,6 +12289,122 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type GuestCreateInput = {
+    id?: string
+    fullName: string
+    email?: string | null
+    address?: string | null
+    phone: string
+    age?: number | null
+    institution?: string | null
+    gender?: $Enums.Gender | null
+    lastEducation?: $Enums.LastEducation | null
+    occupation?: string | null
+    purpose?: $Enums.Purpose | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    queues?: QueueCreateNestedManyWithoutGuestInput
+  }
+
+  export type GuestUncheckedCreateInput = {
+    id?: string
+    fullName: string
+    email?: string | null
+    address?: string | null
+    phone: string
+    age?: number | null
+    institution?: string | null
+    gender?: $Enums.Gender | null
+    lastEducation?: $Enums.LastEducation | null
+    occupation?: string | null
+    purpose?: $Enums.Purpose | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    queues?: QueueUncheckedCreateNestedManyWithoutGuestInput
+  }
+
+  export type GuestUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: StringFieldUpdateOperationsInput | string
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    institution?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    lastEducation?: NullableEnumLastEducationFieldUpdateOperationsInput | $Enums.LastEducation | null
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
+    purpose?: NullableEnumPurposeFieldUpdateOperationsInput | $Enums.Purpose | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    queues?: QueueUpdateManyWithoutGuestNestedInput
+  }
+
+  export type GuestUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: StringFieldUpdateOperationsInput | string
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    institution?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    lastEducation?: NullableEnumLastEducationFieldUpdateOperationsInput | $Enums.LastEducation | null
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
+    purpose?: NullableEnumPurposeFieldUpdateOperationsInput | $Enums.Purpose | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    queues?: QueueUncheckedUpdateManyWithoutGuestNestedInput
+  }
+
+  export type GuestCreateManyInput = {
+    id?: string
+    fullName: string
+    email?: string | null
+    address?: string | null
+    phone: string
+    age?: number | null
+    institution?: string | null
+    gender?: $Enums.Gender | null
+    lastEducation?: $Enums.LastEducation | null
+    occupation?: string | null
+    purpose?: $Enums.Purpose | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GuestUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: StringFieldUpdateOperationsInput | string
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    institution?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    lastEducation?: NullableEnumLastEducationFieldUpdateOperationsInput | $Enums.LastEducation | null
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
+    purpose?: NullableEnumPurposeFieldUpdateOperationsInput | $Enums.Purpose | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GuestUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: StringFieldUpdateOperationsInput | string
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    institution?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    lastEducation?: NullableEnumLastEducationFieldUpdateOperationsInput | $Enums.LastEducation | null
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
+    purpose?: NullableEnumPurposeFieldUpdateOperationsInput | $Enums.Purpose | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -10662,6 +12586,38 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type EnumGenderNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.Gender | EnumGenderFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Gender[] | ListEnumGenderFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Gender[] | ListEnumGenderFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumGenderNullableFilter<$PrismaModel> | $Enums.Gender | null
+  }
+
+  export type EnumLastEducationNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.LastEducation | EnumLastEducationFieldRefInput<$PrismaModel> | null
+    in?: $Enums.LastEducation[] | ListEnumLastEducationFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.LastEducation[] | ListEnumLastEducationFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumLastEducationNullableFilter<$PrismaModel> | $Enums.LastEducation | null
+  }
+
+  export type EnumPurposeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.Purpose | EnumPurposeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Purpose[] | ListEnumPurposeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Purpose[] | ListEnumPurposeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumPurposeNullableFilter<$PrismaModel> | $Enums.Purpose | null
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -10671,18 +12627,34 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     phone?: SortOrder
+    address?: SortOrder
+    age?: SortOrder
+    gender?: SortOrder
+    lastEducation?: SortOrder
+    occupation?: SortOrder
     institution?: SortOrder
     email?: SortOrder
+    purpose?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type VisitorAvgOrderByAggregateInput = {
+    age?: SortOrder
   }
 
   export type VisitorMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     phone?: SortOrder
+    address?: SortOrder
+    age?: SortOrder
+    gender?: SortOrder
+    lastEducation?: SortOrder
+    occupation?: SortOrder
     institution?: SortOrder
     email?: SortOrder
+    purpose?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -10691,10 +12663,20 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     phone?: SortOrder
+    address?: SortOrder
+    age?: SortOrder
+    gender?: SortOrder
+    lastEducation?: SortOrder
+    occupation?: SortOrder
     institution?: SortOrder
     email?: SortOrder
+    purpose?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type VisitorSumOrderByAggregateInput = {
+    age?: SortOrder
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -10713,6 +12695,52 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type EnumGenderNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Gender | EnumGenderFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Gender[] | ListEnumGenderFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Gender[] | ListEnumGenderFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumGenderNullableWithAggregatesFilter<$PrismaModel> | $Enums.Gender | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumGenderNullableFilter<$PrismaModel>
+    _max?: NestedEnumGenderNullableFilter<$PrismaModel>
+  }
+
+  export type EnumLastEducationNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LastEducation | EnumLastEducationFieldRefInput<$PrismaModel> | null
+    in?: $Enums.LastEducation[] | ListEnumLastEducationFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.LastEducation[] | ListEnumLastEducationFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumLastEducationNullableWithAggregatesFilter<$PrismaModel> | $Enums.LastEducation | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumLastEducationNullableFilter<$PrismaModel>
+    _max?: NestedEnumLastEducationNullableFilter<$PrismaModel>
+  }
+
+  export type EnumPurposeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Purpose | EnumPurposeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Purpose[] | ListEnumPurposeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Purpose[] | ListEnumPurposeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumPurposeNullableWithAggregatesFilter<$PrismaModel> | $Enums.Purpose | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumPurposeNullableFilter<$PrismaModel>
+    _max?: NestedEnumPurposeNullableFilter<$PrismaModel>
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -10761,6 +12789,11 @@ export namespace Prisma {
     isNot?: VisitorWhereInput
   }
 
+  export type GuestNullableScalarRelationFilter = {
+    is?: GuestWhereInput | null
+    isNot?: GuestWhereInput | null
+  }
+
   export type ServiceScalarRelationFilter = {
     is?: ServiceWhereInput
     isNot?: ServiceWhereInput
@@ -10771,12 +12804,20 @@ export namespace Prisma {
     isNot?: UserWhereInput | null
   }
 
+  export type QueueQueueDateServiceIdQueueNumberCompoundUniqueInput = {
+    queueDate: Date | string
+    serviceId: string
+    queueNumber: number
+  }
+
   export type QueueCountOrderByAggregateInput = {
     id?: SortOrder
     queueNumber?: SortOrder
     status?: SortOrder
     queueType?: SortOrder
+    queueDate?: SortOrder
     visitorId?: SortOrder
+    guestId?: SortOrder
     serviceId?: SortOrder
     adminId?: SortOrder
     startTime?: SortOrder
@@ -10797,7 +12838,9 @@ export namespace Prisma {
     queueNumber?: SortOrder
     status?: SortOrder
     queueType?: SortOrder
+    queueDate?: SortOrder
     visitorId?: SortOrder
+    guestId?: SortOrder
     serviceId?: SortOrder
     adminId?: SortOrder
     startTime?: SortOrder
@@ -10814,7 +12857,9 @@ export namespace Prisma {
     queueNumber?: SortOrder
     status?: SortOrder
     queueType?: SortOrder
+    queueDate?: SortOrder
     visitorId?: SortOrder
+    guestId?: SortOrder
     serviceId?: SortOrder
     adminId?: SortOrder
     startTime?: SortOrder
@@ -10970,6 +13015,62 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     userId?: SortOrder
+  }
+
+  export type GuestCountOrderByAggregateInput = {
+    id?: SortOrder
+    fullName?: SortOrder
+    email?: SortOrder
+    address?: SortOrder
+    phone?: SortOrder
+    age?: SortOrder
+    institution?: SortOrder
+    gender?: SortOrder
+    lastEducation?: SortOrder
+    occupation?: SortOrder
+    purpose?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GuestAvgOrderByAggregateInput = {
+    age?: SortOrder
+  }
+
+  export type GuestMaxOrderByAggregateInput = {
+    id?: SortOrder
+    fullName?: SortOrder
+    email?: SortOrder
+    address?: SortOrder
+    phone?: SortOrder
+    age?: SortOrder
+    institution?: SortOrder
+    gender?: SortOrder
+    lastEducation?: SortOrder
+    occupation?: SortOrder
+    purpose?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GuestMinOrderByAggregateInput = {
+    id?: SortOrder
+    fullName?: SortOrder
+    email?: SortOrder
+    address?: SortOrder
+    phone?: SortOrder
+    age?: SortOrder
+    institution?: SortOrder
+    gender?: SortOrder
+    lastEducation?: SortOrder
+    occupation?: SortOrder
+    purpose?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GuestSumOrderByAggregateInput = {
+    age?: SortOrder
   }
 
   export type QueueCreateNestedManyWithoutAdminInput = {
@@ -11132,6 +13233,26 @@ export namespace Prisma {
     set?: string | null
   }
 
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type NullableEnumGenderFieldUpdateOperationsInput = {
+    set?: $Enums.Gender | null
+  }
+
+  export type NullableEnumLastEducationFieldUpdateOperationsInput = {
+    set?: $Enums.LastEducation | null
+  }
+
+  export type NullableEnumPurposeFieldUpdateOperationsInput = {
+    set?: $Enums.Purpose | null
+  }
+
   export type QueueUpdateManyWithoutVisitorNestedInput = {
     create?: XOR<QueueCreateWithoutVisitorInput, QueueUncheckedCreateWithoutVisitorInput> | QueueCreateWithoutVisitorInput[] | QueueUncheckedCreateWithoutVisitorInput[]
     connectOrCreate?: QueueCreateOrConnectWithoutVisitorInput | QueueCreateOrConnectWithoutVisitorInput[]
@@ -11164,6 +13285,12 @@ export namespace Prisma {
     create?: XOR<VisitorCreateWithoutQueuesInput, VisitorUncheckedCreateWithoutQueuesInput>
     connectOrCreate?: VisitorCreateOrConnectWithoutQueuesInput
     connect?: VisitorWhereUniqueInput
+  }
+
+  export type GuestCreateNestedOneWithoutQueuesInput = {
+    create?: XOR<GuestCreateWithoutQueuesInput, GuestUncheckedCreateWithoutQueuesInput>
+    connectOrCreate?: GuestCreateOrConnectWithoutQueuesInput
+    connect?: GuestWhereUniqueInput
   }
 
   export type ServiceCreateNestedOneWithoutQueuesInput = {
@@ -11210,6 +13337,16 @@ export namespace Prisma {
     update?: XOR<XOR<VisitorUpdateToOneWithWhereWithoutQueuesInput, VisitorUpdateWithoutQueuesInput>, VisitorUncheckedUpdateWithoutQueuesInput>
   }
 
+  export type GuestUpdateOneWithoutQueuesNestedInput = {
+    create?: XOR<GuestCreateWithoutQueuesInput, GuestUncheckedCreateWithoutQueuesInput>
+    connectOrCreate?: GuestCreateOrConnectWithoutQueuesInput
+    upsert?: GuestUpsertWithoutQueuesInput
+    disconnect?: GuestWhereInput | boolean
+    delete?: GuestWhereInput | boolean
+    connect?: GuestWhereUniqueInput
+    update?: XOR<XOR<GuestUpdateToOneWithWhereWithoutQueuesInput, GuestUpdateWithoutQueuesInput>, GuestUncheckedUpdateWithoutQueuesInput>
+  }
+
   export type ServiceUpdateOneRequiredWithoutQueuesNestedInput = {
     create?: XOR<ServiceCreateWithoutQueuesInput, ServiceUncheckedCreateWithoutQueuesInput>
     connectOrCreate?: ServiceCreateOrConnectWithoutQueuesInput
@@ -11242,6 +13379,48 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutNotificationsInput, UserUpdateWithoutNotificationsInput>, UserUncheckedUpdateWithoutNotificationsInput>
+  }
+
+  export type QueueCreateNestedManyWithoutGuestInput = {
+    create?: XOR<QueueCreateWithoutGuestInput, QueueUncheckedCreateWithoutGuestInput> | QueueCreateWithoutGuestInput[] | QueueUncheckedCreateWithoutGuestInput[]
+    connectOrCreate?: QueueCreateOrConnectWithoutGuestInput | QueueCreateOrConnectWithoutGuestInput[]
+    createMany?: QueueCreateManyGuestInputEnvelope
+    connect?: QueueWhereUniqueInput | QueueWhereUniqueInput[]
+  }
+
+  export type QueueUncheckedCreateNestedManyWithoutGuestInput = {
+    create?: XOR<QueueCreateWithoutGuestInput, QueueUncheckedCreateWithoutGuestInput> | QueueCreateWithoutGuestInput[] | QueueUncheckedCreateWithoutGuestInput[]
+    connectOrCreate?: QueueCreateOrConnectWithoutGuestInput | QueueCreateOrConnectWithoutGuestInput[]
+    createMany?: QueueCreateManyGuestInputEnvelope
+    connect?: QueueWhereUniqueInput | QueueWhereUniqueInput[]
+  }
+
+  export type QueueUpdateManyWithoutGuestNestedInput = {
+    create?: XOR<QueueCreateWithoutGuestInput, QueueUncheckedCreateWithoutGuestInput> | QueueCreateWithoutGuestInput[] | QueueUncheckedCreateWithoutGuestInput[]
+    connectOrCreate?: QueueCreateOrConnectWithoutGuestInput | QueueCreateOrConnectWithoutGuestInput[]
+    upsert?: QueueUpsertWithWhereUniqueWithoutGuestInput | QueueUpsertWithWhereUniqueWithoutGuestInput[]
+    createMany?: QueueCreateManyGuestInputEnvelope
+    set?: QueueWhereUniqueInput | QueueWhereUniqueInput[]
+    disconnect?: QueueWhereUniqueInput | QueueWhereUniqueInput[]
+    delete?: QueueWhereUniqueInput | QueueWhereUniqueInput[]
+    connect?: QueueWhereUniqueInput | QueueWhereUniqueInput[]
+    update?: QueueUpdateWithWhereUniqueWithoutGuestInput | QueueUpdateWithWhereUniqueWithoutGuestInput[]
+    updateMany?: QueueUpdateManyWithWhereWithoutGuestInput | QueueUpdateManyWithWhereWithoutGuestInput[]
+    deleteMany?: QueueScalarWhereInput | QueueScalarWhereInput[]
+  }
+
+  export type QueueUncheckedUpdateManyWithoutGuestNestedInput = {
+    create?: XOR<QueueCreateWithoutGuestInput, QueueUncheckedCreateWithoutGuestInput> | QueueCreateWithoutGuestInput[] | QueueUncheckedCreateWithoutGuestInput[]
+    connectOrCreate?: QueueCreateOrConnectWithoutGuestInput | QueueCreateOrConnectWithoutGuestInput[]
+    upsert?: QueueUpsertWithWhereUniqueWithoutGuestInput | QueueUpsertWithWhereUniqueWithoutGuestInput[]
+    createMany?: QueueCreateManyGuestInputEnvelope
+    set?: QueueWhereUniqueInput | QueueWhereUniqueInput[]
+    disconnect?: QueueWhereUniqueInput | QueueWhereUniqueInput[]
+    delete?: QueueWhereUniqueInput | QueueWhereUniqueInput[]
+    connect?: QueueWhereUniqueInput | QueueWhereUniqueInput[]
+    update?: QueueUpdateWithWhereUniqueWithoutGuestInput | QueueUpdateWithWhereUniqueWithoutGuestInput[]
+    updateMany?: QueueUpdateManyWithWhereWithoutGuestInput | QueueUpdateManyWithWhereWithoutGuestInput[]
+    deleteMany?: QueueScalarWhereInput | QueueScalarWhereInput[]
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -11359,6 +13538,38 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedEnumGenderNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.Gender | EnumGenderFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Gender[] | ListEnumGenderFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Gender[] | ListEnumGenderFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumGenderNullableFilter<$PrismaModel> | $Enums.Gender | null
+  }
+
+  export type NestedEnumLastEducationNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.LastEducation | EnumLastEducationFieldRefInput<$PrismaModel> | null
+    in?: $Enums.LastEducation[] | ListEnumLastEducationFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.LastEducation[] | ListEnumLastEducationFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumLastEducationNullableFilter<$PrismaModel> | $Enums.LastEducation | null
+  }
+
+  export type NestedEnumPurposeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.Purpose | EnumPurposeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Purpose[] | ListEnumPurposeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Purpose[] | ListEnumPurposeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumPurposeNullableFilter<$PrismaModel> | $Enums.Purpose | null
+  }
+
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -11376,7 +13587,7 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
     notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -11384,7 +13595,53 @@ export namespace Prisma {
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedEnumGenderNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Gender | EnumGenderFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Gender[] | ListEnumGenderFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Gender[] | ListEnumGenderFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumGenderNullableWithAggregatesFilter<$PrismaModel> | $Enums.Gender | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumGenderNullableFilter<$PrismaModel>
+    _max?: NestedEnumGenderNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumLastEducationNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LastEducation | EnumLastEducationFieldRefInput<$PrismaModel> | null
+    in?: $Enums.LastEducation[] | ListEnumLastEducationFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.LastEducation[] | ListEnumLastEducationFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumLastEducationNullableWithAggregatesFilter<$PrismaModel> | $Enums.LastEducation | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumLastEducationNullableFilter<$PrismaModel>
+    _max?: NestedEnumLastEducationNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPurposeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Purpose | EnumPurposeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Purpose[] | ListEnumPurposeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Purpose[] | ListEnumPurposeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumPurposeNullableWithAggregatesFilter<$PrismaModel> | $Enums.Purpose | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumPurposeNullableFilter<$PrismaModel>
+    _max?: NestedEnumPurposeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumQueueStatusFilter<$PrismaModel = never> = {
@@ -11491,6 +13748,7 @@ export namespace Prisma {
     queueNumber: number
     status?: $Enums.QueueStatus
     queueType?: $Enums.QueueType
+    queueDate?: Date | string
     startTime?: Date | string | null
     endTime?: Date | string | null
     createdAt?: Date | string
@@ -11499,6 +13757,7 @@ export namespace Prisma {
     filledSKD?: boolean
     trackingLink?: string | null
     visitor: VisitorCreateNestedOneWithoutQueuesInput
+    guest?: GuestCreateNestedOneWithoutQueuesInput
     service: ServiceCreateNestedOneWithoutQueuesInput
   }
 
@@ -11507,7 +13766,9 @@ export namespace Prisma {
     queueNumber: number
     status?: $Enums.QueueStatus
     queueType?: $Enums.QueueType
+    queueDate?: Date | string
     visitorId: string
+    guestId?: string | null
     serviceId: string
     startTime?: Date | string | null
     endTime?: Date | string | null
@@ -11582,7 +13843,9 @@ export namespace Prisma {
     queueNumber?: IntFilter<"Queue"> | number
     status?: EnumQueueStatusFilter<"Queue"> | $Enums.QueueStatus
     queueType?: EnumQueueTypeFilter<"Queue"> | $Enums.QueueType
+    queueDate?: DateTimeFilter<"Queue"> | Date | string
     visitorId?: StringFilter<"Queue"> | string
+    guestId?: StringNullableFilter<"Queue"> | string | null
     serviceId?: StringFilter<"Queue"> | string
     adminId?: StringNullableFilter<"Queue"> | string | null
     startTime?: DateTimeNullableFilter<"Queue"> | Date | string | null
@@ -11629,6 +13892,7 @@ export namespace Prisma {
     queueNumber: number
     status?: $Enums.QueueStatus
     queueType?: $Enums.QueueType
+    queueDate?: Date | string
     startTime?: Date | string | null
     endTime?: Date | string | null
     createdAt?: Date | string
@@ -11637,6 +13901,7 @@ export namespace Prisma {
     filledSKD?: boolean
     trackingLink?: string | null
     visitor: VisitorCreateNestedOneWithoutQueuesInput
+    guest?: GuestCreateNestedOneWithoutQueuesInput
     admin?: UserCreateNestedOneWithoutQueuesInput
   }
 
@@ -11645,7 +13910,9 @@ export namespace Prisma {
     queueNumber: number
     status?: $Enums.QueueStatus
     queueType?: $Enums.QueueType
+    queueDate?: Date | string
     visitorId: string
+    guestId?: string | null
     adminId?: string | null
     startTime?: Date | string | null
     endTime?: Date | string | null
@@ -11687,6 +13954,7 @@ export namespace Prisma {
     queueNumber: number
     status?: $Enums.QueueStatus
     queueType?: $Enums.QueueType
+    queueDate?: Date | string
     startTime?: Date | string | null
     endTime?: Date | string | null
     createdAt?: Date | string
@@ -11694,6 +13962,7 @@ export namespace Prisma {
     tempUuid?: string | null
     filledSKD?: boolean
     trackingLink?: string | null
+    guest?: GuestCreateNestedOneWithoutQueuesInput
     service: ServiceCreateNestedOneWithoutQueuesInput
     admin?: UserCreateNestedOneWithoutQueuesInput
   }
@@ -11703,6 +13972,8 @@ export namespace Prisma {
     queueNumber: number
     status?: $Enums.QueueStatus
     queueType?: $Enums.QueueType
+    queueDate?: Date | string
+    guestId?: string | null
     serviceId: string
     adminId?: string | null
     startTime?: Date | string | null
@@ -11744,8 +14015,14 @@ export namespace Prisma {
     id?: string
     name: string
     phone: string
+    address?: string | null
+    age?: number | null
+    gender?: $Enums.Gender | null
+    lastEducation?: $Enums.LastEducation | null
+    occupation?: string | null
     institution?: string | null
     email?: string | null
+    purpose?: $Enums.Purpose | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11754,8 +14031,14 @@ export namespace Prisma {
     id?: string
     name: string
     phone: string
+    address?: string | null
+    age?: number | null
+    gender?: $Enums.Gender | null
+    lastEducation?: $Enums.LastEducation | null
+    occupation?: string | null
     institution?: string | null
     email?: string | null
+    purpose?: $Enums.Purpose | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11763,6 +14046,43 @@ export namespace Prisma {
   export type VisitorCreateOrConnectWithoutQueuesInput = {
     where: VisitorWhereUniqueInput
     create: XOR<VisitorCreateWithoutQueuesInput, VisitorUncheckedCreateWithoutQueuesInput>
+  }
+
+  export type GuestCreateWithoutQueuesInput = {
+    id?: string
+    fullName: string
+    email?: string | null
+    address?: string | null
+    phone: string
+    age?: number | null
+    institution?: string | null
+    gender?: $Enums.Gender | null
+    lastEducation?: $Enums.LastEducation | null
+    occupation?: string | null
+    purpose?: $Enums.Purpose | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GuestUncheckedCreateWithoutQueuesInput = {
+    id?: string
+    fullName: string
+    email?: string | null
+    address?: string | null
+    phone: string
+    age?: number | null
+    institution?: string | null
+    gender?: $Enums.Gender | null
+    lastEducation?: $Enums.LastEducation | null
+    occupation?: string | null
+    purpose?: $Enums.Purpose | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GuestCreateOrConnectWithoutQueuesInput = {
+    where: GuestWhereUniqueInput
+    create: XOR<GuestCreateWithoutQueuesInput, GuestUncheckedCreateWithoutQueuesInput>
   }
 
   export type ServiceCreateWithoutQueuesInput = {
@@ -11828,8 +14148,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    lastEducation?: NullableEnumLastEducationFieldUpdateOperationsInput | $Enums.LastEducation | null
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
     institution?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    purpose?: NullableEnumPurposeFieldUpdateOperationsInput | $Enums.Purpose | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11838,8 +14164,57 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    lastEducation?: NullableEnumLastEducationFieldUpdateOperationsInput | $Enums.LastEducation | null
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
     institution?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    purpose?: NullableEnumPurposeFieldUpdateOperationsInput | $Enums.Purpose | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GuestUpsertWithoutQueuesInput = {
+    update: XOR<GuestUpdateWithoutQueuesInput, GuestUncheckedUpdateWithoutQueuesInput>
+    create: XOR<GuestCreateWithoutQueuesInput, GuestUncheckedCreateWithoutQueuesInput>
+    where?: GuestWhereInput
+  }
+
+  export type GuestUpdateToOneWithWhereWithoutQueuesInput = {
+    where?: GuestWhereInput
+    data: XOR<GuestUpdateWithoutQueuesInput, GuestUncheckedUpdateWithoutQueuesInput>
+  }
+
+  export type GuestUpdateWithoutQueuesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: StringFieldUpdateOperationsInput | string
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    institution?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    lastEducation?: NullableEnumLastEducationFieldUpdateOperationsInput | $Enums.LastEducation | null
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
+    purpose?: NullableEnumPurposeFieldUpdateOperationsInput | $Enums.Purpose | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GuestUncheckedUpdateWithoutQueuesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: StringFieldUpdateOperationsInput | string
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    institution?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    lastEducation?: NullableEnumLastEducationFieldUpdateOperationsInput | $Enums.LastEducation | null
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
+    purpose?: NullableEnumPurposeFieldUpdateOperationsInput | $Enums.Purpose | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11964,12 +14339,76 @@ export namespace Prisma {
     queues?: QueueUncheckedUpdateManyWithoutAdminNestedInput
   }
 
+  export type QueueCreateWithoutGuestInput = {
+    id?: string
+    queueNumber: number
+    status?: $Enums.QueueStatus
+    queueType?: $Enums.QueueType
+    queueDate?: Date | string
+    startTime?: Date | string | null
+    endTime?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tempUuid?: string | null
+    filledSKD?: boolean
+    trackingLink?: string | null
+    visitor: VisitorCreateNestedOneWithoutQueuesInput
+    service: ServiceCreateNestedOneWithoutQueuesInput
+    admin?: UserCreateNestedOneWithoutQueuesInput
+  }
+
+  export type QueueUncheckedCreateWithoutGuestInput = {
+    id?: string
+    queueNumber: number
+    status?: $Enums.QueueStatus
+    queueType?: $Enums.QueueType
+    queueDate?: Date | string
+    visitorId: string
+    serviceId: string
+    adminId?: string | null
+    startTime?: Date | string | null
+    endTime?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tempUuid?: string | null
+    filledSKD?: boolean
+    trackingLink?: string | null
+  }
+
+  export type QueueCreateOrConnectWithoutGuestInput = {
+    where: QueueWhereUniqueInput
+    create: XOR<QueueCreateWithoutGuestInput, QueueUncheckedCreateWithoutGuestInput>
+  }
+
+  export type QueueCreateManyGuestInputEnvelope = {
+    data: QueueCreateManyGuestInput | QueueCreateManyGuestInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type QueueUpsertWithWhereUniqueWithoutGuestInput = {
+    where: QueueWhereUniqueInput
+    update: XOR<QueueUpdateWithoutGuestInput, QueueUncheckedUpdateWithoutGuestInput>
+    create: XOR<QueueCreateWithoutGuestInput, QueueUncheckedCreateWithoutGuestInput>
+  }
+
+  export type QueueUpdateWithWhereUniqueWithoutGuestInput = {
+    where: QueueWhereUniqueInput
+    data: XOR<QueueUpdateWithoutGuestInput, QueueUncheckedUpdateWithoutGuestInput>
+  }
+
+  export type QueueUpdateManyWithWhereWithoutGuestInput = {
+    where: QueueScalarWhereInput
+    data: XOR<QueueUpdateManyMutationInput, QueueUncheckedUpdateManyWithoutGuestInput>
+  }
+
   export type QueueCreateManyAdminInput = {
     id?: string
     queueNumber: number
     status?: $Enums.QueueStatus
     queueType?: $Enums.QueueType
+    queueDate?: Date | string
     visitorId: string
+    guestId?: string | null
     serviceId: string
     startTime?: Date | string | null
     endTime?: Date | string | null
@@ -11995,6 +14434,7 @@ export namespace Prisma {
     queueNumber?: IntFieldUpdateOperationsInput | number
     status?: EnumQueueStatusFieldUpdateOperationsInput | $Enums.QueueStatus
     queueType?: EnumQueueTypeFieldUpdateOperationsInput | $Enums.QueueType
+    queueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     startTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12003,6 +14443,7 @@ export namespace Prisma {
     filledSKD?: BoolFieldUpdateOperationsInput | boolean
     trackingLink?: NullableStringFieldUpdateOperationsInput | string | null
     visitor?: VisitorUpdateOneRequiredWithoutQueuesNestedInput
+    guest?: GuestUpdateOneWithoutQueuesNestedInput
     service?: ServiceUpdateOneRequiredWithoutQueuesNestedInput
   }
 
@@ -12011,7 +14452,9 @@ export namespace Prisma {
     queueNumber?: IntFieldUpdateOperationsInput | number
     status?: EnumQueueStatusFieldUpdateOperationsInput | $Enums.QueueStatus
     queueType?: EnumQueueTypeFieldUpdateOperationsInput | $Enums.QueueType
+    queueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     visitorId?: StringFieldUpdateOperationsInput | string
+    guestId?: NullableStringFieldUpdateOperationsInput | string | null
     serviceId?: StringFieldUpdateOperationsInput | string
     startTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12027,7 +14470,9 @@ export namespace Prisma {
     queueNumber?: IntFieldUpdateOperationsInput | number
     status?: EnumQueueStatusFieldUpdateOperationsInput | $Enums.QueueStatus
     queueType?: EnumQueueTypeFieldUpdateOperationsInput | $Enums.QueueType
+    queueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     visitorId?: StringFieldUpdateOperationsInput | string
+    guestId?: NullableStringFieldUpdateOperationsInput | string | null
     serviceId?: StringFieldUpdateOperationsInput | string
     startTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12073,7 +14518,9 @@ export namespace Prisma {
     queueNumber: number
     status?: $Enums.QueueStatus
     queueType?: $Enums.QueueType
+    queueDate?: Date | string
     visitorId: string
+    guestId?: string | null
     adminId?: string | null
     startTime?: Date | string | null
     endTime?: Date | string | null
@@ -12089,6 +14536,7 @@ export namespace Prisma {
     queueNumber?: IntFieldUpdateOperationsInput | number
     status?: EnumQueueStatusFieldUpdateOperationsInput | $Enums.QueueStatus
     queueType?: EnumQueueTypeFieldUpdateOperationsInput | $Enums.QueueType
+    queueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     startTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12097,6 +14545,7 @@ export namespace Prisma {
     filledSKD?: BoolFieldUpdateOperationsInput | boolean
     trackingLink?: NullableStringFieldUpdateOperationsInput | string | null
     visitor?: VisitorUpdateOneRequiredWithoutQueuesNestedInput
+    guest?: GuestUpdateOneWithoutQueuesNestedInput
     admin?: UserUpdateOneWithoutQueuesNestedInput
   }
 
@@ -12105,7 +14554,9 @@ export namespace Prisma {
     queueNumber?: IntFieldUpdateOperationsInput | number
     status?: EnumQueueStatusFieldUpdateOperationsInput | $Enums.QueueStatus
     queueType?: EnumQueueTypeFieldUpdateOperationsInput | $Enums.QueueType
+    queueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     visitorId?: StringFieldUpdateOperationsInput | string
+    guestId?: NullableStringFieldUpdateOperationsInput | string | null
     adminId?: NullableStringFieldUpdateOperationsInput | string | null
     startTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12121,7 +14572,9 @@ export namespace Prisma {
     queueNumber?: IntFieldUpdateOperationsInput | number
     status?: EnumQueueStatusFieldUpdateOperationsInput | $Enums.QueueStatus
     queueType?: EnumQueueTypeFieldUpdateOperationsInput | $Enums.QueueType
+    queueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     visitorId?: StringFieldUpdateOperationsInput | string
+    guestId?: NullableStringFieldUpdateOperationsInput | string | null
     adminId?: NullableStringFieldUpdateOperationsInput | string | null
     startTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12137,6 +14590,8 @@ export namespace Prisma {
     queueNumber: number
     status?: $Enums.QueueStatus
     queueType?: $Enums.QueueType
+    queueDate?: Date | string
+    guestId?: string | null
     serviceId: string
     adminId?: string | null
     startTime?: Date | string | null
@@ -12153,6 +14608,7 @@ export namespace Prisma {
     queueNumber?: IntFieldUpdateOperationsInput | number
     status?: EnumQueueStatusFieldUpdateOperationsInput | $Enums.QueueStatus
     queueType?: EnumQueueTypeFieldUpdateOperationsInput | $Enums.QueueType
+    queueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     startTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12160,6 +14616,7 @@ export namespace Prisma {
     tempUuid?: NullableStringFieldUpdateOperationsInput | string | null
     filledSKD?: BoolFieldUpdateOperationsInput | boolean
     trackingLink?: NullableStringFieldUpdateOperationsInput | string | null
+    guest?: GuestUpdateOneWithoutQueuesNestedInput
     service?: ServiceUpdateOneRequiredWithoutQueuesNestedInput
     admin?: UserUpdateOneWithoutQueuesNestedInput
   }
@@ -12169,6 +14626,8 @@ export namespace Prisma {
     queueNumber?: IntFieldUpdateOperationsInput | number
     status?: EnumQueueStatusFieldUpdateOperationsInput | $Enums.QueueStatus
     queueType?: EnumQueueTypeFieldUpdateOperationsInput | $Enums.QueueType
+    queueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    guestId?: NullableStringFieldUpdateOperationsInput | string | null
     serviceId?: StringFieldUpdateOperationsInput | string
     adminId?: NullableStringFieldUpdateOperationsInput | string | null
     startTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12185,6 +14644,80 @@ export namespace Prisma {
     queueNumber?: IntFieldUpdateOperationsInput | number
     status?: EnumQueueStatusFieldUpdateOperationsInput | $Enums.QueueStatus
     queueType?: EnumQueueTypeFieldUpdateOperationsInput | $Enums.QueueType
+    queueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    guestId?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceId?: StringFieldUpdateOperationsInput | string
+    adminId?: NullableStringFieldUpdateOperationsInput | string | null
+    startTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tempUuid?: NullableStringFieldUpdateOperationsInput | string | null
+    filledSKD?: BoolFieldUpdateOperationsInput | boolean
+    trackingLink?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type QueueCreateManyGuestInput = {
+    id?: string
+    queueNumber: number
+    status?: $Enums.QueueStatus
+    queueType?: $Enums.QueueType
+    queueDate?: Date | string
+    visitorId: string
+    serviceId: string
+    adminId?: string | null
+    startTime?: Date | string | null
+    endTime?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tempUuid?: string | null
+    filledSKD?: boolean
+    trackingLink?: string | null
+  }
+
+  export type QueueUpdateWithoutGuestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    queueNumber?: IntFieldUpdateOperationsInput | number
+    status?: EnumQueueStatusFieldUpdateOperationsInput | $Enums.QueueStatus
+    queueType?: EnumQueueTypeFieldUpdateOperationsInput | $Enums.QueueType
+    queueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    startTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tempUuid?: NullableStringFieldUpdateOperationsInput | string | null
+    filledSKD?: BoolFieldUpdateOperationsInput | boolean
+    trackingLink?: NullableStringFieldUpdateOperationsInput | string | null
+    visitor?: VisitorUpdateOneRequiredWithoutQueuesNestedInput
+    service?: ServiceUpdateOneRequiredWithoutQueuesNestedInput
+    admin?: UserUpdateOneWithoutQueuesNestedInput
+  }
+
+  export type QueueUncheckedUpdateWithoutGuestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    queueNumber?: IntFieldUpdateOperationsInput | number
+    status?: EnumQueueStatusFieldUpdateOperationsInput | $Enums.QueueStatus
+    queueType?: EnumQueueTypeFieldUpdateOperationsInput | $Enums.QueueType
+    queueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitorId?: StringFieldUpdateOperationsInput | string
+    serviceId?: StringFieldUpdateOperationsInput | string
+    adminId?: NullableStringFieldUpdateOperationsInput | string | null
+    startTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tempUuid?: NullableStringFieldUpdateOperationsInput | string | null
+    filledSKD?: BoolFieldUpdateOperationsInput | boolean
+    trackingLink?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type QueueUncheckedUpdateManyWithoutGuestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    queueNumber?: IntFieldUpdateOperationsInput | number
+    status?: EnumQueueStatusFieldUpdateOperationsInput | $Enums.QueueStatus
+    queueType?: EnumQueueTypeFieldUpdateOperationsInput | $Enums.QueueType
+    queueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitorId?: StringFieldUpdateOperationsInput | string
     serviceId?: StringFieldUpdateOperationsInput | string
     adminId?: NullableStringFieldUpdateOperationsInput | string | null
     startTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

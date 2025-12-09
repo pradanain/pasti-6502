@@ -25,14 +25,17 @@ export async function GET(req: NextRequest) {
 		const clientHash = url.searchParams.get("hash") || "";
 
 		// Get today's date (start of day)
-		const today = new Date();
-		today.setHours(0, 0, 0, 0);
+		const startOfToday = new Date();
+		startOfToday.setHours(0, 0, 0, 0);
+		const endOfToday = new Date(startOfToday);
+		endOfToday.setDate(endOfToday.getDate() + 1);
 		// Get all queues for today, without filtering by status
 		const queues = await prisma.queue.findMany({
 			where: {
-				// createdAt: {
-				// 	gte: today,
-				// },
+				createdAt: {
+					gte: startOfToday,
+					lt: endOfToday,
+				},
 			},
 			include: {
 				visitor: {

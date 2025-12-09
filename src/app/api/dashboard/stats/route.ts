@@ -18,43 +18,49 @@ export async function GET(request: Request) {
 		const clientHash = url.searchParams.get("hash");
 
 		// Get the start of today
-		const today = new Date();
-		today.setHours(0, 0, 0, 0);
+		const startOfToday = new Date();
+		startOfToday.setHours(0, 0, 0, 0);
+		const endOfToday = new Date(startOfToday);
+		endOfToday.setDate(endOfToday.getDate() + 1);
 
 		// Get queue counts by status for today
 		const waitingCount = await prisma.queue.count({
 			where: {
 				status: QueueStatus.WAITING,
-				// createdAt: {
-				// 	gte: today,
-				// },
+				createdAt: {
+					gte: startOfToday,
+					lt: endOfToday,
+				},
 			},
 		});
 
 		const servingCount = await prisma.queue.count({
 			where: {
 				status: QueueStatus.SERVING,
-				// createdAt: {
-				// 	gte: today,
-				// },
+				createdAt: {
+					gte: startOfToday,
+					lt: endOfToday,
+				},
 			},
 		});
 
 		const completedCount = await prisma.queue.count({
 			where: {
 				status: QueueStatus.COMPLETED,
-				// createdAt: {
-				// 	gte: today,
-				// },
+				createdAt: {
+					gte: startOfToday,
+					lt: endOfToday,
+				},
 			},
 		});
 
 		const canceledCount = await prisma.queue.count({
 			where: {
 				status: QueueStatus.CANCELED,
-				// createdAt: {
-				// 	gte: today,
-				// },
+				createdAt: {
+					gte: startOfToday,
+					lt: endOfToday,
+				},
 			},
 		});
 
@@ -67,9 +73,10 @@ export async function GET(request: Request) {
 				status: {
 					in: [QueueStatus.COMPLETED, QueueStatus.SERVING],
 				},
-				// createdAt: {
-				// 	gte: today,
-				// },
+				createdAt: {
+					gte: startOfToday,
+					lt: endOfToday,
+				},
 				startTime: {
 					not: null,
 				},

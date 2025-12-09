@@ -57,7 +57,7 @@ export async function POST(
 		}
 
 		// Default reminder message
-		const defaultMessage = `Halo ${queue.visitor.name}, mohon kesediaannya untuk mengisi Survei Kebutuhan Data (SKD) 2025 BPS Buton Selatan melalui link berikut: s.bps.go.id/skd2025_bpsbusel`;
+		const defaultMessage = `Halo ${queue.visitor.name}, mohon kesediaannya untuk mengisi Survei Kebutuhan Data (SKD) 2025 BPS Bulungan melalui link berikut: s.bps.go.id/skd2025_bpsbusel`;
 
 		// Use provided message or default
 		const reminderMessage = message || defaultMessage;

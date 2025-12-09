@@ -142,8 +142,14 @@ exports.Prisma.VisitorScalarFieldEnum = {
   id: 'id',
   name: 'name',
   phone: 'phone',
+  address: 'address',
+  age: 'age',
+  gender: 'gender',
+  lastEducation: 'lastEducation',
+  occupation: 'occupation',
   institution: 'institution',
   email: 'email',
+  purpose: 'purpose',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -153,7 +159,9 @@ exports.Prisma.QueueScalarFieldEnum = {
   queueNumber: 'queueNumber',
   status: 'status',
   queueType: 'queueType',
+  queueDate: 'queueDate',
   visitorId: 'visitorId',
+  guestId: 'guestId',
   serviceId: 'serviceId',
   adminId: 'adminId',
   startTime: 'startTime',
@@ -193,6 +201,22 @@ exports.Prisma.NotificationScalarFieldEnum = {
   userId: 'userId'
 };
 
+exports.Prisma.GuestScalarFieldEnum = {
+  id: 'id',
+  fullName: 'fullName',
+  email: 'email',
+  address: 'address',
+  phone: 'phone',
+  age: 'age',
+  institution: 'institution',
+  gender: 'gender',
+  lastEducation: 'lastEducation',
+  occupation: 'occupation',
+  purpose: 'purpose',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -217,6 +241,31 @@ exports.ServiceStatus = exports.$Enums.ServiceStatus = {
   INACTIVE: 'INACTIVE'
 };
 
+exports.Gender = exports.$Enums.Gender = {
+  MALE: 'MALE',
+  FEMALE: 'FEMALE'
+};
+
+exports.LastEducation = exports.$Enums.LastEducation = {
+  SD: 'SD',
+  SMP: 'SMP',
+  SMA_SMK: 'SMA_SMK',
+  D1: 'D1',
+  D2: 'D2',
+  D3: 'D3',
+  D4_S1: 'D4_S1',
+  S2: 'S2',
+  S3: 'S3',
+  LAINNYA: 'LAINNYA'
+};
+
+exports.Purpose = exports.$Enums.Purpose = {
+  KONSULTASI_STATISTIK: 'KONSULTASI_STATISTIK',
+  PERPUSTAKAAN: 'PERPUSTAKAAN',
+  REKOMENDASI_STATISTIK: 'REKOMENDASI_STATISTIK',
+  LAINNYA: 'LAINNYA'
+};
+
 exports.QueueStatus = exports.$Enums.QueueStatus = {
   WAITING: 'WAITING',
   SERVING: 'SERVING',
@@ -236,7 +285,8 @@ exports.Prisma.ModelName = {
   Queue: 'Queue',
   QRCode: 'QRCode',
   TempVisitorLink: 'TempVisitorLink',
-  Notification: 'Notification'
+  Notification: 'Notification',
+  Guest: 'Guest'
 };
 
 /**

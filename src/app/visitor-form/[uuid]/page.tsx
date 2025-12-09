@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState, useCallback, use } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
+import { useParams } from "next/navigation";
 import {
     Card,
     CardContent,
@@ -22,6 +23,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import {
     Select,
@@ -30,7 +32,12 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { SelectTrigger } from "@/app/visitor-form/visitor-form-select";
-import { ServiceStatus } from "@/generated/prisma";
+import {
+    Gender,
+    LastEducation,
+    Purpose,
+    ServiceStatus,
+} from "@/generated/prisma";
 import { Badge } from "@/components/ui/badge";
 import {
     AlertCircle,
@@ -64,33 +71,117 @@ interface QueueTrackingInfo {
     queueType: string; // Added queue type
 }
 
+const genderOptions = [
+    { value: Gender.MALE, label: "Laki-Laki" },
+    { value: Gender.FEMALE, label: "Perempuan" },
+];
+
+const educationOptions = [
+    { value: LastEducation.SD, label: "SD atau setingkatnya" },
+    { value: LastEducation.SMP, label: "SMP atau setingkatnya" },
+    { value: LastEducation.SMA_SMK, label: "SMA atau setingkatnya" },
+    { value: LastEducation.D1, label: "D1" },
+    { value: LastEducation.D2, label: "D2" },
+    { value: LastEducation.D3, label: "D3" },
+    { value: LastEducation.D4_S1, label: "D4 / S1" },
+    { value: LastEducation.S2, label: "S2" },
+    { value: LastEducation.S3, label: "S3" },
+    { value: LastEducation.LAINNYA, label: "Lainnya" },
+];
+
+const occupationOptions = [
+    { value: "Guru/Dosen", label: "Guru/Dosen" },
+    { value: "Karyawan BUMN", label: "Karyawan BUMN" },
+    { value: "Karyawan Swasta", label: "Karyawan Swasta" },
+    { value: "Pelajar/Mahasiswa", label: "Pelajar/Mahasiswa" },
+    { value: "PNS/PPPK", label: "PNS/PPPK" },
+    { value: "TNI/Polri", label: "TNI/Polri" },
+    { value: "Wiraswasta", label: "Wiraswasta" },
+    { value: "Lainnya", label: "Lainnya" },
+];
+
+const purposeOptions: { value: Purpose; label: string; description?: string }[] =
+    [
+        {
+            value: Purpose.KONSULTASI_STATISTIK,
+            label: "Konsultasi Statistik",
+            description: "Diskusi dan pendampingan data",
+        },
+        {
+            value: Purpose.PERPUSTAKAAN,
+            label: "Perpustakaan",
+            description: "Akses ruang baca & referensi",
+        },
+        {
+            value: Purpose.REKOMENDASI_STATISTIK,
+            label: "Rekomendasi Statistik",
+            description: "Surat rekomendasi/pendataan",
+        },
+        { value: Purpose.LAINNYA, label: "Lainnya" },
+    ];
+
 const visitorFormSchema = z.object({
-    name: z.string().min(2, "Nama minimal 2 karakter"),
-    phone: z.string().min(10, "Nomor telepon minimal 10 digit"),
-    institution: z.string().optional(),
-    email: z
+    name: z.string().min(2, "Nama lengkap minimal 2 karakter"),
+    email: z.string().email("Format email tidak valid"),
+    address: z
         .string()
-        .email("Format email tidak valid")
-        .optional()
-        .or(z.literal("")),
+        .min(5, "Alamat minimal 5 karakter")
+        .max(200, "Alamat terlalu panjang"),
+    phone: z
+        .string()
+        .min(10, "No. WhatsApp minimal 10 digit")
+        .max(20, "No. WhatsApp maksimal 20 digit")
+        .regex(/^[0-9+()\s-]+$/, "Gunakan format nomor yang valid"),
+    age: z.preprocess(
+        (value) => {
+            if (value === "" || value === null || typeof value === "undefined") {
+                return undefined;
+            }
+            const asNumber = Number(value);
+            return Number.isNaN(asNumber) ? value : asNumber;
+        },
+        z
+            .number()
+            .int()
+            .min(1, "Umur minimal 1 tahun")
+            .max(120, "Umur tidak valid")
+    ),
+    institution: z
+        .string()
+        .min(2, "Asal/Instansi minimal 2 karakter")
+        .max(150, "Isian terlalu panjang"),
+    gender: z.nativeEnum(Gender, {
+        required_error: "Jenis kelamin wajib dipilih",
+    }),
+    lastEducation: z.nativeEnum(LastEducation, {
+        required_error: "Pendidikan terakhir wajib dipilih",
+    }),
+    occupation: z.enum(
+        occupationOptions.map((option) => option.value) as [
+            string,
+            ...string[]
+        ],
+        { required_error: "Pekerjaan wajib dipilih" }
+    ),
+    purpose: z.nativeEnum(Purpose, {
+        required_error: "Keperluan wajib dipilih",
+    }),
     serviceId: z.string().min(1, "Layanan harus dipilih"),
     queueType: z.enum(["ONLINE", "OFFLINE"], {
         required_error: "Tipe antrean harus dipilih",
     }),
 });
 
-type VisitorFormValues = z.infer<typeof visitorFormSchema>;
+type VisitorFormFormValues = z.input<typeof visitorFormSchema>;
+type VisitorFormValues = z.output<typeof visitorFormSchema>;
 
-export default function VisitorFormPage({
-    params,
-}: {
-    params: Promise<{ uuid: string }>;
-}) {
+export default function VisitorFormPage() {
     const [isLoading, setIsLoading] = useState(true); // Start with loading state
     const [isValid, setIsValid] = useState(true);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isTracking, setIsTracking] = useState(false);
-    const [services, setServices] = useState<Service[]>([]); const [queueInfo, setQueueInfo] = useState<{
+    const [services, setServices] = useState<Service[]>([]);
+    const [queueInfo, setQueueInfo] = useState<{
         queueNumber: number;
         serviceName: string;
         visitorName: string;
@@ -106,9 +197,8 @@ export default function VisitorFormPage({
     const [showForm, setShowForm] = useState(false); // Control when to show the form
     const [queueHash, setQueueHash] = useState<string>("");
     const [lastUpdatedAt, setLastUpdatedAt] = useState<Date | null>(null); // Track when the data was last updated
-
-    // Get the UUID from params
-    const { uuid } = use(params);
+    const params = useParams<{ uuid: string }>();
+    const uuid = params?.uuid || "";
 
     // Get search params to check for direct form flag    // const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
     // const shouldShowForm = searchParams.get('directToForm') === 'true';
@@ -121,22 +211,29 @@ export default function VisitorFormPage({
         return `${day}${month}`;
     };
 
-    const form = useForm<VisitorFormValues>({
+    const form = useForm<VisitorFormFormValues, unknown, VisitorFormValues>({
         resolver: zodResolver(visitorFormSchema),
         defaultValues: {
             name: "",
-            phone: "",
-            institution: "",
             email: "",
+            address: "",
+            phone: "",
+            age: undefined,
+            institution: "",
+            gender: undefined,
+            lastEducation: undefined,
+            occupation: "Pelajar/Mahasiswa",
+            purpose: Purpose.KONSULTASI_STATISTIK,
             serviceId: "",
             queueType: "OFFLINE", // Default to offline
-        },
+        } satisfies Partial<VisitorFormFormValues>,
     }); // Function to check tracking status
     const checkTrackingStatus = useCallback(
-        async (forceRefresh: boolean = false) => {
+        async (forceRefresh: boolean = false, manageLoading: boolean = true) => {
+            let statusResult: string | null = null;
             try {
                 // Only show loading indicator on initial load or forced refresh
-                if (!trackingInfo || forceRefresh) {
+                if (manageLoading && (!trackingInfo || forceRefresh)) {
                     setIsLoading(true);
                 }
 
@@ -156,6 +253,7 @@ export default function VisitorFormPage({
                         if (data.tracking.status === "SUCCESS") {
                             setTrackingInfo(data.tracking.queue);
                             setTrackingStatus("SUCCESS");
+                            statusResult = "SUCCESS";
                             setIsTracking(true);
                             setIsValid(true);
                             // Store the hash for future comparisons
@@ -164,6 +262,7 @@ export default function VisitorFormPage({
                             setLastUpdatedAt(new Date());
                         } else if (data.tracking.status === "NOT_SUBMITTED") {
                             setTrackingStatus("NOT_SUBMITTED");
+                            statusResult = "NOT_SUBMITTED";
                             setTrackingMessage(data.tracking.message);
                             setIsTracking(false);
                             setIsValid(true);
@@ -178,70 +277,66 @@ export default function VisitorFormPage({
                     }
                 }
             } catch (error) {
-                console.error("Error checking tracking status:", error);
+                console.error("Error checking tracking status", error);
                 if (!trackingInfo || !isTracking) {
                     setTrackingStatus(null);
                 }
             } finally {
                 // Only update loading state for initial load or manual refresh
-                if (!trackingInfo || forceRefresh) {
+                if (manageLoading && (!trackingInfo || forceRefresh)) {
                     setIsLoading(false);
                 }
             }
+            return statusResult;
         },
         [uuid, queueHash, trackingInfo, isTracking]
     );
 
     useEffect(() => {
-        // Validate UUID and fetch services or check tracking status
         const validateUuid = async () => {
+            if (!uuid) return;
             try {
                 setIsLoading(true);
 
-                // First check if this is a valid tracking request
-                await checkTrackingStatus(); // If we're not tracking, try to validate as normal form UUID
-                if (!isTracking && trackingStatus !== "SUCCESS") {
-                    // First, check if UUID is valid by fetching services
-                    const response = await fetch(`/api/visitor-form/${uuid}`, {
-                        headers: {
-                            "x-visitor-uuid": uuid,
-                        },
-                    });
-                    if (response.status === 200) {
-                        const data = await response.json();
-                        // Instead of showing the form and then redirecting, redirect immediately
-                        window.location.href =
-                            "/visitor-form/preload?uuid=" + data.dynamicUuid;
-                        return; // Exit early to prevent form from showing
-                    } else {
-                        const response = await fetch(`/api/visitor-form/services`, {
-                            headers: {
-                                "x-visitor-uuid": uuid,
-                            },
-                        });
-
-                        if (response.status === 200) {
-                            const data = await response.json();
-                            setServices(data.services);
-                            setIsValid(true);
-                            setShowForm(true); // Only now show the form when we're sure
-                        } else {
-                            // Only show error if we couldn't track OR get services
-                            // Check if we're truly not in any valid state
-                            if (
-                                trackingStatus !== "NOT_SUBMITTED" &&
-                                trackingStatus !== "SUCCESS" &&
-                                !isTracking
-                            ) {
-                                setIsValid(false);
-                                // Don't use toast here as it might appear even when tracking is valid
-                                // We'll use a dedicated error component instead
-                            }
-                        }
-                    }
+                const trackingResult = await checkTrackingStatus(true, false);
+                if (trackingResult === "SUCCESS") {
+                    setIsLoading(false);
+                    return;
                 }
+
+                // Try to get services directly (valid for dynamic UUID)
+                const servicesResponse = await fetch(`/api/visitor-form/services`, {
+                    headers: {
+                        "x-visitor-uuid": uuid,
+                    },
+                });
+
+                if (servicesResponse.status === 200) {
+                    const data = await servicesResponse.json();
+                    setServices(data.services);
+                    setIsValid(true);
+                    setShowForm(true);
+                    setIsLoading(false);
+                    return;
+                }
+
+                // If services are not available, attempt to exchange static UUID for dynamic
+                const uuidResponse = await fetch(`/api/visitor-form/${uuid}`, {
+                    headers: {
+                        "x-visitor-uuid": uuid,
+                    },
+                });
+
+                if (uuidResponse.status === 200) {
+                    const data = await uuidResponse.json();
+                    window.location.href =
+                        "/visitor-form/preload?uuid=" + data.dynamicUuid;
+                    return;
+                }
+
+                setIsValid(false);
             } catch (error) {
-                console.error("Error validating UUID:", error);
+                console.error("Error validating UUID", error);
                 setIsValid(false);
                 toast.error("Terjadi kesalahan, silakan coba lagi");
             } finally {
@@ -249,10 +344,8 @@ export default function VisitorFormPage({
             }
         };
 
-        if (uuid) {
-            validateUuid();
-        }
-    }, [uuid, isTracking, trackingStatus, checkTrackingStatus]); // Setup polling for tracking status updates with hash-based change detection
+        validateUuid();
+    }, [uuid, checkTrackingStatus]);
     useEffect(() => {
         let pollingInterval: NodeJS.Timeout | null = null;
 
@@ -307,16 +400,23 @@ export default function VisitorFormPage({
     const onSubmit = async (data: VisitorFormValues) => {
         try {
             setIsLoading(true);
+            const payload = {
+                ...data,
+                name: data.name.trim(),
+                email: data.email.trim(),
+                address: data.address.trim(),
+                phone: data.phone.trim(),
+                institution: data.institution.trim(),
+                occupation: data.occupation.trim(),
+                tempUuid: uuid,
+            };
 
             const response = await fetch("/api/visitor-form/submit", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    ...data,
-                    tempUuid: uuid,
-                }),
+                body: JSON.stringify(payload),
             });
 
             const result = await response.json();
@@ -381,6 +481,7 @@ export default function VisitorFormPage({
         }
     };
     const openSKD2025Form = () => {
+        // TODO: This token is embedded client-side; if it grants privileged access, proxy via a server route or use a safer token mechanism.
         window.open(
             "https://skd.bps.go.id/SKD2025/web/entri/responden/blok1?token=NNLZR0-Ikj98u0ciQHM0bpCHH018ESCbIDW0w90wUTUU2k5dv7OylsciSW4odYl5ZFrBGLweIGNGOYTXy6_AjBPg3QzJvcMRE4Cq",
             "_blank"
@@ -443,7 +544,7 @@ export default function VisitorFormPage({
                     <CardHeader>
                         <CardTitle className="text-primary text-center">Status Antrean</CardTitle>
                         <CardDescription className="text-center">
-                            BPS Kabupaten Buton Selatan
+                            BPS Kabupaten Bulungan
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">                        <div className="flex flex-col justify-center items-center space-y-2">                            <p className="font-bold text-accent text-4xl">
@@ -489,7 +590,7 @@ export default function VisitorFormPage({
                                             Ada {trackingInfo.waitingBefore} antrean sebelum Anda
                                         </p>
                                         <p className="text-yellow-700 text-sm">
-                                            Estimasi waktu tunggu: ±{trackingInfo.estimated} menit
+                                            Estimasi waktu tunggu: ~{trackingInfo.estimated} menit
                                         </p>
                                     </div>
                                 </div>
@@ -677,119 +778,354 @@ export default function VisitorFormPage({
         );
     }
     return (
-        <div className="relative flex justify-center items-center bg-background p-4 min-h-screen">
-            {/* Theme toggle button at top right */}
-            <div className="top-4 right-4 z-10 absolute">
+        <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-100 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+            <div className="pointer-events-none absolute inset-0">
+                <div className="absolute -left-20 top-10 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
+                <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-emerald-400/10 blur-3xl" />
+                <div className="absolute left-1/3 top-1/2 h-48 w-48 rounded-full bg-amber-300/10 blur-3xl" />
+            </div>
+            <div className="absolute right-4 top-4 z-20">
                 <ThemeToggle />
             </div>
-            {showForm ? (
-                <Card className="w-full max-w-md">
-                    <CardHeader>
-                        <CardTitle className="text-primary text-center">
-                            Form Pengunjung PST
-                        </CardTitle>
-                        <CardDescription className="text-center">
-                            Badan Pusat Statistik Kabupaten Buton Selatan
-                        </CardDescription>
-                        {trackingStatus === "NOT_SUBMITTED" && (
-                            <Alert className="bg-blue-50 mt-4 border-blue-200">
-                                <AlertCircle className="w-5 h-5 text-blue-600" />
-                                <AlertDescription className="text-blue-700">
-                                    {trackingMessage}
-                                </AlertDescription>
-                            </Alert>
-                        )}
-                    </CardHeader>
+            <div className="relative z-10 mx-auto flex max-w-6xl flex-col px-4 py-10 md:py-12">
+                {showForm ? (
+                    <div className="space-y-6">
+                        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+                            <div className="space-y-2">
+                                <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                                    Buku Tamu PST
+                                    <Badge variant="secondary" className="bg-white/80 text-primary dark:bg-slate-900/60">
+                                        Wajib Isi
+                                    </Badge>
+                                </div>
+                                <h1 className="text-3xl font-bold leading-tight text-slate-900 dark:text-white md:text-4xl">
+                                    Lengkapi data untuk ambil nomor antrean
+                                </h1>
+                                <p className="max-w-2xl text-slate-600 dark:text-slate-300">
+                                    Data lengkap membantu petugas menyiapkan pelayanan yang sesuai. Isi identitas sesuai KTP/instansi.
+                                </p>
+                            </div>
+                        </div>
+                        <div className="grid items-start gap-6 lg:grid-cols-[1.15fr,0.85fr]">
+                            <Card className="border-slate-200/70 bg-white/80 shadow-2xl backdrop-blur dark:border-slate-800/80 dark:bg-slate-900/60">
+                                <CardHeader className="pb-4">
+                                    <CardTitle>Form Pengunjung</CardTitle>
+                                    <CardDescription>
+                                        Seluruh kolom wajib diisi untuk memproses antrean Anda.
+                                    </CardDescription>
+                                    {trackingStatus === "NOT_SUBMITTED" && (
+                                        <Alert className="mt-4 border-blue-200 bg-blue-50 dark:border-blue-900/40 dark:bg-blue-900/30">
+                                            <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-300" />
+                                            <AlertDescription className="text-blue-800 dark:text-blue-100">
+                                                {trackingMessage}
+                                            </AlertDescription>
+                                        </Alert>
+                                    )}
+                                </CardHeader>
                     <CardContent>
                         <Form {...form}>
                             <form
                                 onSubmit={form.handleSubmit(onSubmit)}
-                                className="space-y-4"
+                                className="space-y-6"
                             >
-                                <FormField
-                                    control={form.control}
-                                    name="name"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Nama</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Masukkan nama lengkap" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="phone"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Nomor Telepon</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder="Masukkan nomor telepon"
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="institution"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Instansi (Opsional)</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder="Masukkan nama instansi"
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="email"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Email (Opsional)</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Masukkan alamat email" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="serviceId"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Layanan</FormLabel>
-                                            <Select
-                                                onValueChange={field.onChange}
-                                                defaultValue={field.value}
-                                            >                                                <FormControl>
-                                                    <SelectTrigger className="bg-sidebar w-full">
-                                                        <SelectValue placeholder="Pilih layanan" />
-                                                    </SelectTrigger>
+                                <div className="grid gap-4 md:grid-cols-2">
+                                    <FormField
+                                        control={form.control}
+                                        name="name"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Nama Lengkap</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        placeholder="Sesuai KTP atau identitas resmi"
+                                                        {...field}
+                                                    />
                                                 </FormControl>
-                                                <SelectContent>
-                                                    {services.map((service) => (
-                                                        <SelectItem key={service.id} value={service.id}>
-                                                            {service.name}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="email"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Email</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        type="email"
+                                                        placeholder="Email aktif untuk konfirmasi"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+                                <FormField
+                                    control={form.control}
+                                    name="address"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Alamat</FormLabel>
+                                            <FormControl>
+                                                <Textarea
+                                                    placeholder="Tuliskan alamat domisili lengkap"
+                                                    rows={3}
+                                                    {...field}
+                                                />
+                                            </FormControl>
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
+                                <div className="grid gap-4 md:grid-cols-2">
+                                    <FormField
+                                        control={form.control}
+                                        name="phone"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>No. WhatsApp</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        placeholder="Contoh: 0812xxxxxxx"
+                                                        inputMode="tel"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="age"
+                                        render={({ field }) => {
+                                            const { onChange, value, ...rest } = field;
+                                            const normalizedValue: number | string =
+                                                typeof value === "number"
+                                                    ? value
+                                                    : value == null
+                                                        ? ""
+                                                        : String(value);
+
+                                            return (
+                                                <FormItem>
+                                                    <FormLabel>Umur</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="number"
+                                                            inputMode="numeric"
+                                                            min={1}
+                                                            max={120}
+                                                            placeholder="Masukkan umur"
+                                                            value={normalizedValue}
+                                                            onChange={(event) =>
+                                                                onChange(
+                                                                    event.target
+                                                                        .value === ""
+                                                                        ? undefined
+                                                                        : Number(
+                                                                              event.target.value
+                                                                          )
+                                                                )
+                                                            }
+                                                            {...rest}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            );
+                                        }}
+                                    />
+                                </div>
+                                <div className="grid gap-4 md:grid-cols-2">
+                                    <FormField
+                                        control={form.control}
+                                        name="institution"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Asal/Instansi</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        placeholder="Tuliskan daerah/instansi tempat kerja"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                <p className="text-xs text-muted-foreground">
+                                                    Asal = daerah/kota, Instansi = tempat kerja/organisasi.
+                                                </p>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="gender"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Jenis Kelamin</FormLabel>
+                                                <Select
+                                                    onValueChange={field.onChange}
+                                                    defaultValue={field.value}
+                                                >
+                                                    <FormControl>
+                                                        <SelectTrigger className="bg-sidebar w-full">
+                                                            <SelectValue placeholder="Pilih jenis kelamin" />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        {genderOptions.map((option) => (
+                                                            <SelectItem
+                                                                key={option.value}
+                                                                value={option.value}
+                                                            >
+                                                                {option.label}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+                                <div className="grid gap-4 md:grid-cols-2">
+                                    <FormField
+                                        control={form.control}
+                                        name="lastEducation"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Pendidikan Terakhir</FormLabel>
+                                                <Select
+                                                    onValueChange={field.onChange}
+                                                    defaultValue={field.value}
+                                                >
+                                                    <FormControl>
+                                                        <SelectTrigger className="bg-sidebar w-full">
+                                                            <SelectValue placeholder="Pilih pendidikan" />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        {educationOptions.map((option) => (
+                                                            <SelectItem
+                                                                key={option.value}
+                                                                value={option.value}
+                                                            >
+                                                                {option.label}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="occupation"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Pekerjaan</FormLabel>
+                                                <Select
+                                                    onValueChange={field.onChange}
+                                                    defaultValue={field.value}
+                                                >
+                                                    <FormControl>
+                                                        <SelectTrigger className="bg-sidebar w-full">
+                                                            <SelectValue placeholder="Pilih pekerjaan" />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        {occupationOptions.map((option) => (
+                                                            <SelectItem
+                                                                key={option.value}
+                                                                value={option.value}
+                                                            >
+                                                                {option.label}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+                                <div className="grid gap-4 md:grid-cols-2">
+                                    <FormField
+                                        control={form.control}
+                                        name="purpose"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Keperluan</FormLabel>
+                                                <Select
+                                                    onValueChange={field.onChange}
+                                                    defaultValue={field.value}
+                                                >
+                                                    <FormControl>
+                                                        <SelectTrigger className="bg-sidebar w-full">
+                                                            <SelectValue placeholder="Pilih keperluan" />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        {purposeOptions.map((option) => (
+                                                            <SelectItem
+                                                                key={option.value}
+                                                                value={option.value}
+                                                            >
+                                                                <div className="flex flex-col">
+                                                                    <span>{option.label}</span>
+                                                                    {option.description && (
+                                                                        <span className="text-xs text-muted-foreground">
+                                                                            {option.description}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="serviceId"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Layanan</FormLabel>
+                                                <Select
+                                                    onValueChange={field.onChange}
+                                                    defaultValue={field.value}
+                                                >
+                                                    <FormControl>
+                                                        <SelectTrigger className="bg-sidebar w-full">
+                                                            <SelectValue placeholder="Pilih layanan" />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        {services
+                                                            .filter((service) => service.status === ServiceStatus.ACTIVE)
+                                                            .map((service) => (
+                                                                <SelectItem key={service.id} value={service.id}>
+                                                                    {service.name}
+                                                                </SelectItem>
+                                                            ))}
+                                                        {services.length === 0 && (
+                                                            <SelectItem value="loading" disabled>
+                                                                Memuat daftar layanan...
+                                                            </SelectItem>
+                                                        )}
+                                                    </SelectContent>
+                                                </Select>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
                                 <FormField
                                     control={form.control}
                                     name="queueType"
@@ -799,50 +1135,125 @@ export default function VisitorFormPage({
                                             <Select
                                                 onValueChange={field.onChange}
                                                 defaultValue={field.value}
-                                            >                                                <FormControl>
+                                            >
+                                                <FormControl>
                                                     <SelectTrigger className="bg-sidebar w-full">
                                                         <SelectValue placeholder="Pilih tipe antrean" />
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
-                                                    <SelectItem value="OFFLINE">Offline (Di Lokasi PST)</SelectItem>
-                                                    <SelectItem value="ONLINE">Online (Daring)</SelectItem>
+                                                    <SelectItem value="OFFLINE">Offline (di lokasi PST)</SelectItem>
+                                                    <SelectItem value="ONLINE">Online (daring)</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
-                                <Button type="submit" className="w-full" disabled={isLoading}>
-                                    {isLoading ? "Mengirim..." : "Kirim"}
-                                </Button>
+                                <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                                    <p className="text-sm text-muted-foreground">
+                                        Pastikan data sudah benar sebelum mengirim.
+                                    </p>
+                                    <Button type="submit" className="w-full md:w-auto" disabled={isLoading}>
+                                        {isLoading ? "Mengirim..." : "Kirim & Ambil Nomor"}
+                                    </Button>
+                                </div>
                             </form>
                         </Form>
                     </CardContent>
-                    <CardFooter className="text-muted-foreground text-sm text-center">
-                        <p>
-                            Silakan isi data diri Anda untuk mendapatkan nomor antrean layanan
-                            PST BPS Kabupaten Buton Selatan
-                        </p>
-                    </CardFooter>
                 </Card>
-            ) : (
-                <Card className="w-full max-w-md">
-                    <CardHeader className="text-center">                        <CardTitle className="text-primary">
-                        <div className="bg-secondary mx-auto rounded w-3/4 h-8 animate-pulse"></div>
+                <div className="space-y-4">
+                    <Card className="border-slate-200/70 bg-white/70 shadow-xl backdrop-blur dark:border-slate-800/80 dark:bg-slate-900/60">
+                        <CardHeader className="pb-3">
+                            <CardTitle>Tips pengisian cepat</CardTitle>
+                            <CardDescription>
+                                Data lengkap mempercepat verifikasi di loket.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="flex items-start gap-3">
+                                <CheckCircle className="h-5 w-5 text-emerald-500" />
+                                <div>
+                                    <p className="font-medium">Kontak aktif</p>
+                                    <p className="text-sm text-muted-foreground">
+                                        Email dan WhatsApp digunakan untuk status antrean.
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-3">
+                                <CheckCircle className="h-5 w-5 text-emerald-500" />
+                                <div>
+                                    <p className="font-medium">Asal/Instansi</p>
+                                    <p className="text-sm text-muted-foreground">
+                                        Asal = daerah/kota, Instansi = kantor/sekolah/tempat kerja.
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-3">
+                                <CheckCircle className="h-5 w-5 text-emerald-500" />
+                                <div>
+                                    <p className="font-medium">Keperluan jelas</p>
+                                    <p className="text-sm text-muted-foreground">
+                                        Pilih layanan sesuai kebutuhan agar diarahkan ke loket tepat.
+                                    </p>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                    <Card className="border-slate-200/70 bg-white/70 shadow-xl backdrop-blur dark:border-slate-800/80 dark:bg-slate-900/60">
+                        <CardHeader className="pb-3">
+                            <CardTitle>Layanan tersedia</CardTitle>
+                            <CardDescription>
+                                Pilih sesuai keperluan kunjungan Anda.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                            {services.length > 0 ? (
+                                services
+                                    .filter((service) => service.status === ServiceStatus.ACTIVE)
+                                    .map((service) => (
+                                        <div
+                                            key={service.id}
+                                            className="flex items-center justify-between rounded-md border border-dashed border-slate-200 px-3 py-2 text-sm dark:border-slate-800"
+                                        >
+                                            <span className="font-medium">{service.name}</span>
+                                            <Badge variant="outline" className="bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-100">
+                                                Aktif
+                                            </Badge>
+                                        </div>
+                                    ))
+                            ) : (
+                                <p className="text-sm text-muted-foreground">
+                                    Memuat daftar layanan...
+                                </p>
+                            )}
+                            <div className="rounded-md bg-primary/5 p-3 text-sm text-primary dark:bg-primary/10">
+                                Pastikan pendidikan, pekerjaan, dan keperluan dipilih agar petugas dapat menyiapkan layanan yang tepat.
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
+                    </div>
+        ) : (
+            <Card className="mx-auto w-full max-w-md bg-white/80 shadow-xl backdrop-blur dark:bg-slate-900/70">
+                <CardHeader className="text-center">
+                    <CardTitle className="text-primary">
+                        <div className="mx-auto h-8 w-3/4 rounded bg-secondary animate-pulse"></div>
                     </CardTitle>
-                        <CardDescription>
-                            <div className="bg-secondary mt-2 rounded w-full h-6 animate-pulse"></div>
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex flex-col items-center space-y-6 py-4">
-                        <Loader2 className="w-16 h-16 text-primary animate-spin" />
-                        <p className="mt-4 text-muted-foreground text-center">
-                            Memeriksa informasi antrean...
-                        </p>
-                    </CardContent>
-                </Card>
-            )}
+                    <CardDescription>
+                        <div className="mt-2 h-6 w-full rounded bg-secondary animate-pulse"></div>
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-col items-center space-y-6 py-4">
+                    <Loader2 className="h-16 w-16 animate-spin text-primary" />
+                    <p className="mt-4 text-center text-muted-foreground">
+                        Memeriksa informasi antrean...
+                    </p>
+                </CardContent>
+            </Card>
+        )}
+            </div>
         </div>
     );
 }

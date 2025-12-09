@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
     Card,
     CardContent,
@@ -23,11 +23,13 @@ import {
     UserCog,
     LayoutGrid,
     Calendar,
+    Clock3,
+    Sparkles,
+    UserRound,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-// Define the queue interface
 interface Queue {
     id: string;
     queueNumber: number;
@@ -42,20 +44,34 @@ interface Queue {
     createdAt: string;
 }
 
-// Format queue time to DDMM format (eg. 1405 for May 14)
-const formatQueueTime = (isoDateString: string): string => {
-    const date = new Date(isoDateString);
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is 0-indexed, so add 1
-    return `${day}${month}`;
-};
-
-// Define the admin interface
 interface Admin {
     id: string;
     name: string;
     role: string;
 }
+
+const formatTimestamp = (value: Date | null) =>
+    value
+        ? new Intl.DateTimeFormat("id-ID", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false,
+        }).format(value)
+        : "Belum ada data";
+
+const formatQueueCode = (serviceName: string, queueNumber: number) => {
+    const trimmed = serviceName.toLowerCase();
+    const prefix = trimmed.startsWith("perpust") ? "P"
+        : trimmed.startsWith("konsul") ? "K"
+            : trimmed.startsWith("rekomen") ? "R"
+                : "L";
+    const padded = queueNumber.toString().padStart(3, "0");
+    return `${prefix}-${padded}`;
+};
 
 export default function QueueDisplayPage() {
     const [servingQueues, setServingQueues] = useState<Queue[]>([]);
@@ -67,28 +83,25 @@ export default function QueueDisplayPage() {
     const [selectedDateFilter, setSelectedDateFilter] = useState<string>("today");
     const [admins, setAdmins] = useState<Admin[]>([]);
 
-    // Fetch queue data
+    const highlightedQueue = useMemo(() => {
+        if (nextQueue) return nextQueue;
+        if (servingQueues.length > 0) return servingQueues[0];
+        return null;
+    }, [nextQueue, servingQueues]);
+
     const fetchQueueData = useCallback(async () => {
         try {
             setLoading(true);
-            // Build query parameters
             const queryParams = new URLSearchParams();
-            if (selectedAdmin !== "all") {
-                queryParams.append("adminId", selectedAdmin);
-            }
-            if (selectedDateFilter) {
-                queryParams.append("dateFilter", selectedDateFilter);
-            }
+            if (selectedAdmin !== "all") queryParams.append("adminId", selectedAdmin);
+            if (selectedDateFilter) queryParams.append("dateFilter", selectedDateFilter);
 
-            const queryString = queryParams.toString();
-            const endpoint = queryString
-                ? `/api/queue-display?${queryString}`
+            const endpoint = queryParams.size > 0
+                ? `/api/queue-display?${queryParams.toString()}`
                 : "/api/queue-display";
 
             const response = await fetch(endpoint, {
-                headers: {
-                    "x-queue-hash": dataHash || "",
-                },
+                headers: { "x-queue-hash": dataHash || "" },
             });
 
             if (response.ok) {
@@ -100,16 +113,16 @@ export default function QueueDisplayPage() {
                     setLastUpdatedAt(new Date());
                 }
             } else {
-                console.error("Failed to fetch queue data");
+                toast.error("Gagal memuat data antrean");
             }
         } catch (error) {
             console.error("Error fetching queue data:", error);
+            toast.error("Terjadi kesalahan saat memuat antrean");
         } finally {
             setLoading(false);
         }
     }, [dataHash, selectedAdmin, selectedDateFilter]);
 
-    // Fetch admin list
     const fetchAdmins = useCallback(async () => {
         try {
             const response = await fetch("/api/queue-display/admins");
@@ -122,59 +135,58 @@ export default function QueueDisplayPage() {
         }
     }, []);
 
-    // Initial data fetch
     useEffect(() => {
         fetchQueueData();
         fetchAdmins();
     }, [fetchQueueData, fetchAdmins]);
 
-    // Set up polling
     useEffect(() => {
         const interval = setInterval(() => {
             fetchQueueData();
-        }, 10000); // Poll every 10 seconds
-
+        }, 10000);
         return () => clearInterval(interval);
     }, [fetchQueueData]);
 
-    // Handle admin selection change
-    const handleAdminChange = (value: string) => {
-        setSelectedAdmin(value);
-    };
-
-    // Handle date filter change
-    const handleDateFilterChange = (value: string) => {
-        setSelectedDateFilter(value);
-    };
-
-    // Handle manual refresh
     const handleRefresh = () => {
         toast.info("Memperbarui data antrean...");
         fetchQueueData();
     };
 
     return (
-        <div className="flex flex-col p-4 md:p-8 min-h-screen">
-            <div className="flex flex-wrap justify-between items-center mb-8">
-                <div className="flex items-center gap-4 ml-5">
-                    <LayoutGrid className="size-8 text-primary" />
-                    <div>
-                        <h1 className="font-bold text-3xl md:text-4xl">
-                            Informasi Antrean
-                        </h1>
-                        <p className="text-muted-foreground">
-                            Tampilan nomor antrean yang sedang dilayani
-                        </p>
+        <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#FFF4EC] via-white to-[#FFE5D3] p-4 md:p-8 dark:from-background dark:via-[#1f1f1f] dark:to-background">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(247,144,57,0.15),transparent_35%),radial-gradient(circle_at_80%_10%,rgba(154,5,1,0.12),transparent_30%)]" />
+            <div className="relative z-10 mx-auto flex w-full max-w-screen-2xl flex-col gap-8">
+                <header className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-custom/80 bg-white/80 px-5 py-4 shadow-md backdrop-blur dark:bg-card">
+                    <div className="flex items-center gap-3">
+                        <div className="rounded-xl bg-primary/10 p-3 text-primary">
+                            <LayoutGrid className="h-6 w-6" />
+                        </div>
+                        <div>
+                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-secondary-color">
+                                Tampilan Antrean Publik
+                            </p>
+                            <h1 className="text-2xl font-black text-primary-color md:text-3xl">
+                                Informasi Antrean PST
+                            </h1>
+                            <p className="text-sm text-secondary-color">
+                                Nomor yang sedang dan akan dilayani secara real-time.
+                            </p>
+                        </div>
                     </div>
-                </div>
-                <div className="flex md:flex-row flex-col items-end md:items-center gap-4 mt-4 md:mt-0">
-                    <div className="flex gap-4">
-                        <Select
-                            value={selectedDateFilter}
-                            onValueChange={handleDateFilterChange}
-                        >
-                            <SelectTrigger className="w-[180px]">
-                                <Calendar className="mr-2 w-4 h-4" />
+                    <div className="flex items-center gap-3">
+                        <div className="rounded-full bg-muted/80 px-3 py-2 text-xs text-secondary-color">
+                            <Clock3 className="mr-2 inline h-4 w-4 text-primary" />
+                            {formatTimestamp(lastUpdatedAt)}
+                        </div>
+                        <ThemeToggle />
+                    </div>
+                </header>
+
+                <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/80 bg-white/80 px-4 py-3 shadow-sm backdrop-blur dark:bg-card">
+                    <div className="flex flex-wrap gap-3">
+                        <Select value={selectedDateFilter} onValueChange={setSelectedDateFilter}>
+                            <SelectTrigger className="w-[190px]">
+                                <Calendar className="mr-2 h-4 w-4" />
                                 <SelectValue placeholder="Filter Waktu" />
                             </SelectTrigger>
                             <SelectContent>
@@ -182,9 +194,10 @@ export default function QueueDisplayPage() {
                                 <SelectItem value="all">Semua Antrean</SelectItem>
                             </SelectContent>
                         </Select>
-                        <Select value={selectedAdmin} onValueChange={handleAdminChange}>
-                            <SelectTrigger className="w-[180px] md:w-[220px]">
-                                <SelectValue placeholder="Pilih Admin/Petugas" />
+                        <Select value={selectedAdmin} onValueChange={setSelectedAdmin}>
+                            <SelectTrigger className="w-[210px]">
+                                <UserRound className="mr-2 h-4 w-4" />
+                                <SelectValue placeholder="Pilih Petugas" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="all">Semua Petugas</SelectItem>
@@ -196,154 +209,132 @@ export default function QueueDisplayPage() {
                             </SelectContent>
                         </Select>
                     </div>
-                    <div className="flex gap-4">
-                        <Button
-                            variant="outline"
-                            onClick={handleRefresh}
-                            disabled={loading}
-                        >
-                            <RefreshCw
-                                className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`}
-                            />
-                            <span className="hidden md:inline">Perbarui</span>
+                    <div className="flex items-center gap-2">
+                        <Button variant="outline" className="gap-2" onClick={handleRefresh} disabled={loading}>
+                            <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+                            Perbarui
                         </Button>
-                        <ThemeToggle />
+                        <Badge variant="secondary" className="gap-2 bg-primary/10 text-primary-color">
+                            <Sparkles className="h-4 w-4" />
+                            Live update tiap 10 detik
+                        </Badge>
                     </div>
                 </div>
-            </div>
-            <div className="flex-grow gap-6 grid md:grid-cols-2">
-                {/* Next in queue (now on left) */}
-                <Card className="flex flex-col border-2 border-muted h-full">
-                    <CardHeader className="bg-muted text-2xl">
-                        <CardTitle>Antrean Berikutnya</CardTitle>
-                        <CardDescription>
-                            Antrean yang akan dilayani selanjutnya
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex flex-grow justify-center items-center p-6">
-                        {!nextQueue ? (
-                            <div className="py-12 text-muted-foreground text-center">
-                                <ArrowRight className="opacity-50 mx-auto mb-4 w-24 h-24" />
-                                <p className="text-xl">Tidak ada antrean berikutnya</p>
-                            </div>
-                        ) : (
-                            <div className="flex flex-col justify-center px-10 py-6 border rounded-lg w-full h-full">
-                                <div className="flex justify-between items-start">
-                                    <div>
-                                        <p className="text-muted-foreground text-lg">
-                                            Nomor Antrean
-                                        </p>{" "}
-                                        <p className="font-bold text-6xl md:text-8xl">
-                                            {nextQueue.queueNumber}-
-                                            {formatQueueTime(nextQueue.createdAt)}
+
+                <div className="grid gap-6 lg:grid-cols-2">
+                    <Card className="relative overflow-hidden border border-custom/80 bg-gradient-to-br from-primary/12 via-white to-white shadow-lg dark:from-primary/10 dark:via-card dark:to-card">
+                        <div className="absolute right-4 top-4 h-24 w-24 rounded-full bg-primary/10 blur-3xl" />
+                        <CardHeader className="relative pb-2">
+                            <CardTitle className="text-xl font-bold text-primary-color">Antrean Berikutnya</CardTitle>
+                            <CardDescription className="text-secondary-color">
+                                Antrean yang segera dipanggil ke loket.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="relative">
+                            {highlightedQueue ? (
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between">
+                                    <Badge variant="secondary" className="rounded-full bg-white/70 text-primary-color shadow-sm">
+                                            Urutan berikutnya
+                                        </Badge>
+                                        <p className="text-sm text-secondary-color">
+                                            {highlightedQueue.queueType === "ONLINE" ? "Online" : "Offline"}
                                         </p>
-                                        <div className="mt-4">
-                                            <Badge
-                                                variant="outline"
-                                                className={`text-lg px-3 py-1 ${nextQueue.queueType === "ONLINE"
-                                                        ? "bg-blue-100 text-blue-800"
-                                                        : "bg-green-100 text-green-800"
-                                                    }`}
-                                            >
-                                                {nextQueue.queueType === "ONLINE"
-                                                    ? "Online"
-                                                    : "Offline"}
-                                            </Badge>
-                                        </div>
                                     </div>
-                                    <div className="text-right">
-                                        <p className="text-muted-foreground text-2xl">Layanan</p>
-                                        <p className="mt-2 font-medium text-3xl">
-                                            {nextQueue.service.name}
+                                    <div className="rounded-3xl border border-border/80 bg-white/80 p-8 shadow-lg backdrop-blur dark:bg-card">
+                                        <p className="text-sm text-secondary-color">Nomor Antrean</p>
+                                        <p className="text-6xl font-black leading-tight text-primary-color md:text-8xl lg:text-9xl">
+                                            {formatQueueCode(highlightedQueue.service.name, highlightedQueue.queueNumber)}
                                         </p>
+                                        <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                                            <div className="rounded-lg bg-muted/50 px-4 py-3 text-secondary-color">
+                                                <p className="font-semibold text-primary-color">Layanan</p>
+                                                <p className="text-lg">{highlightedQueue.service.name}</p>
+                                            </div>
+                                            <div className="rounded-lg bg-muted/50 px-4 py-3 text-secondary-color">
+                                                <p className="font-semibold text-primary-color">Petugas</p>
+                                                <p className="text-lg">{highlightedQueue.admin?.name || "-"}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
+                            ) : (
+                                <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-border/80 bg-white/70 p-10 text-center text-secondary-color backdrop-blur dark:bg-card">
+                                    <ArrowRight className="h-12 w-12 text-primary" />
+                                    <p className="text-lg font-semibold text-primary-color">Belum ada antrean berikutnya</p>
+                                    <p className="text-sm">Data akan muncul otomatis saat antrean baru dibuat.</p>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
 
-                {/* Currently being served (now on right) */}
-                <Card className="flex flex-col border-5 border-primary h-full">
-                    <CardHeader className="text-primary-foreground text-2xl">
-                        <CardTitle>Sedang Dilayani</CardTitle>
-                        <CardDescription className="text-primary-foreground/90">
-                            Antrean yang saat ini sedang dilayani oleh petugas
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex-grow py-6">
-                        {servingQueues.length === 0 ? (
-                            <div className="flex flex-col justify-center items-center py-12 h-full text-muted-foreground text-center">
-                                <UserCog className="opacity-50 mb-4 w-24 h-24" />
-                                <p className="text-xl">
-                                    Tidak ada antrean yang sedang dilayani
-                                </p>
-                            </div>
-                        ) : (
-                            <div className="flex flex-col justify-center space-y-6 h-full">
-                                {servingQueues.map((queue) => (
-                                    <div
-                                        key={queue.id}
-                                        className="flex flex-col justify-center bg-sidebar px-10 py-6 border-2 rounded-lg w-full h-full"
-                                    >
-                                        <div className="flex justify-between items-start">
-                                            <div>
-                                                <p className="text-muted-foreground text-lg">
-                                                    Nomor Antrean
-                                                </p>
-                                                <p className="font-bold text-6xl md:text-8xl">
-                                                    {queue.queueNumber}-{formatQueueTime(queue.createdAt)}
-                                                </p>
-                                                <div className="mt-4">
-                                                    <Badge
-                                                        variant="outline"
-                                                        className={`text-lg px-3 py-1 ${queue.queueType === "ONLINE"
-                                                                ? "bg-blue-100 text-blue-800"
-                                                                : "bg-green-100 text-green-800"
-                                                            }`}
-                                                    >
-                                                        {queue.queueType === "ONLINE"
-                                                            ? "Online"
-                                                            : "Offline"}
-                                                    </Badge>
+                    <Card className="border border-custom/80 bg-white/80 shadow-lg backdrop-blur dark:bg-card">
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-xl font-bold text-primary-color">Sedang Dilayani</CardTitle>
+                            <CardDescription className="text-secondary-color">
+                                Nomor yang saat ini diproses petugas.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            {servingQueues.length === 0 ? (
+                                <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-border/80 bg-muted/40 p-10 text-center">
+                                    <UserCog className="h-12 w-12 text-primary" />
+                                    <p className="text-lg font-semibold text-primary-color">Belum ada antrean aktif</p>
+                                    <p className="text-sm text-secondary-color">Nomor akan tampil segera setelah dilayani.</p>
+                                </div>
+                            ) : (
+                                <div className="grid gap-4">
+                                    {servingQueues.map((queue) => (
+                                        <div
+                                            key={queue.id}
+                                            className="rounded-3xl border border-border/70 bg-white/80 p-6 shadow-lg backdrop-blur dark:bg-card"
+                                        >
+                                            <div className="flex items-center justify-between gap-3">
+                                                <div>
+                                                    <p className="text-xs uppercase tracking-wide text-secondary-color">Nomor</p>
+                                                    <p className="text-5xl font-black text-primary-color md:text-6xl lg:text-7xl">
+                                                        {formatQueueCode(queue.service.name, queue.queueNumber)}
+                                                    </p>
+                                                </div>
+                                                <Badge
+                                                    variant="secondary"
+                                                    className={`rounded-full px-3 py-1 text-xs font-semibold ${queue.queueType === "ONLINE"
+                                                        ? "bg-blue-100 text-blue-800"
+                                                        : "bg-green-100 text-green-800"
+                                                        }`}
+                                                >
+                                                    {queue.queueType === "ONLINE" ? "Online" : "Offline"}
+                                                </Badge>
+                                            </div>
+                                            <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                                                <div className="rounded-lg bg-muted/50 px-4 py-3 text-sm text-secondary-color">
+                                                    <p className="font-semibold text-primary-color">Layanan</p>
+                                                    <p className="text-base">{queue.service.name}</p>
+                                                </div>
+                                                <div className="rounded-lg bg-muted/50 px-4 py-3 text-sm text-secondary-color">
+                                                    <p className="font-semibold text-primary-color">Petugas</p>
+                                                    <p className="text-base">{queue.admin?.name || "-"}</p>
                                                 </div>
                                             </div>
-                                            <div className="text-right">
-                                                <p className="text-muted-foreground text-2xl">
-                                                    Layanan
-                                                </p>
-                                                <p className="mt-2 font-medium text-3xl">
-                                                    {queue.service.name}
-                                                </p>
-                                                <p className="mt-4 text-muted-foreground text-2xl">
-                                                    Petugas:{" "}
-                                                    <span className="font-bold text-accent">
-                                                        {queue.admin?.name || "-"}
-                                                    </span>
-                                                </p>
-                                            </div>
                                         </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
-            </div>{" "}
-            <footer className="mt-6 text-muted-foreground text-sm text-center">
-                Data terakhir diperbarui:{" "}
-                {lastUpdatedAt
-                    ? new Intl.DateTimeFormat("id-ID", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        second: "2-digit",
-                        hour12: false,
-                    }).format(lastUpdatedAt)
-                    : "Belum ada data"}
-            </footer>
+                                    ))}
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+                </div>
+
+                <footer className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/80 bg-white/80 px-4 py-3 text-sm text-secondary-color shadow-sm backdrop-blur dark:bg-card">
+                    <div className="flex items-center gap-2">
+                        <Clock3 className="h-4 w-4 text-primary" />
+                        <span>Data terakhir diperbarui: {formatTimestamp(lastUpdatedAt)}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Sparkles className="h-4 w-4 text-accent" />
+                        <span>Antarmuka publik yang mudah dibaca di layar besar.</span>
+                    </div>
+                </footer>
+            </div>
         </div>
     );
 }

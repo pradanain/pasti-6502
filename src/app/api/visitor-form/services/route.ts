@@ -1,13 +1,11 @@
-import { PrismaClient, ServiceStatus } from "@/generated/prisma";
+import { ServiceStatus } from "@/generated/prisma";
 import { NextRequest, NextResponse } from "next/server";
-
-const prisma = new PrismaClient();
+import prisma from "@/lib/prisma";
 
 export async function GET(req: NextRequest) {
 	try {
 		// Get the UUID from the header
 		const visitorUuid = req.headers.get("x-visitor-uuid");
-		console.log("Visitor UUID service:", visitorUuid);
 
 		if (!visitorUuid) {
 			return NextResponse.json(
@@ -60,7 +58,5 @@ export async function GET(req: NextRequest) {
 			{ error: "Failed to fetch services" },
 			{ status: 500 }
 		);
-	} finally {
-		await prisma.$disconnect();
 	}
 }

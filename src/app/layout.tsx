@@ -20,8 +20,8 @@ export const metadata: Metadata = {
     shortcut: "/icon_pst.png",
     apple: "/icon_pst.png",
   },
-  title: "PST BPS Buton Selatan - Sistem Antrean",
-  description: "Sistem Antrean Pelayanan Statistik Terpadu BPS Kabupaten Buton Selatan",
+  title: "PST BPS Bulungan - Sistem Antrean",
+  description: "Sistem Antrean Pelayanan Statistik Terpadu BPS Kabupaten Bulungan",
 };
 
 export default function RootLayout({

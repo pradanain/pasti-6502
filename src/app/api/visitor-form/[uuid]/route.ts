@@ -1,9 +1,7 @@
-import { PrismaClient } from "@/generated/prisma";
+import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 // import validateUuid from "uuid-validate";
-
-const prisma = new PrismaClient();
 
 export async function GET(
 	req: NextRequest,
@@ -41,7 +39,6 @@ export async function GET(
 
 		// Generate a new dynamic UUID for this visitor session
 		const dynamicUuid = uuidv4();
-		console.log("Dynamic UUID:", dynamicUuid);
 
 		// Calculate expiration time (1 hour from now)
 		const expiresAt = new Date();
@@ -64,7 +61,5 @@ export async function GET(
 			{ error: "Failed to process QR code" },
 			{ status: 500 }
 		);
-	} finally {
-		await prisma.$disconnect();
 	}
 }

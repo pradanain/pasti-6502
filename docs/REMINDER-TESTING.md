@@ -1,6 +1,6 @@
 # Pengujian Metode Pengiriman Pengingat
 
-Dokumen ini berisi panduan untuk menguji kedua metode pengiriman pengingat di aplikasi antrean BPS Buton Selatan.
+Dokumen ini berisi panduan untuk menguji kedua metode pengiriman pengingat di aplikasi antrean BPS Bulungan.
 
 ## 1. Pengujian WhatsApp Direct
 

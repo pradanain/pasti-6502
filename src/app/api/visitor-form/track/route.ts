@@ -1,8 +1,6 @@
-import { PrismaClient } from "@/generated/prisma";
+import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "crypto";
-
-const prisma = new PrismaClient();
 
 // Function to generate a hash based on queue data
 function generateQueueHash(queueData: Record<string, unknown>): string {
@@ -15,7 +13,6 @@ export async function GET(req: NextRequest) {
 		// Get the UUID from the header
 		const visitorUuid = req.headers.get("x-visitor-uuid");
 		const clientHash = req.headers.get("x-queue-hash") || "";
-		console.log("Visitor UUID for tracking:", visitorUuid);
 
 		if (!visitorUuid) {
 			return NextResponse.json(
@@ -120,7 +117,5 @@ export async function GET(req: NextRequest) {
 			{ error: "Failed to track queue status" },
 			{ status: 500 }
 		);
-	} finally {
-		await prisma.$disconnect();
 	}
 }

@@ -1,28 +1,68 @@
-import { PrismaClient, Role, ServiceStatus } from "@/generated/prisma";
+import "module-alias/register";
+import { PrismaClient, Role, ServiceStatus } from "../src/generated/prisma";
 import bcryptjs from "bcryptjs";
-// import { v4 as uuidv4 } from "uuid";
 import * as fs from "fs";
 import * as path from "path";
 import QRCode from "qrcode";
+import crypto from "crypto";
 
 const prisma = new PrismaClient();
-const staticUuid = process.env.NEXT_PUBLIC_STATIC_UUID as string;
-if (!staticUuid) {
+const staticUuid = process.env.NEXT_PUBLIC_STATIC_UUID;
+const baseUrl = process.env.NEXTAUTH_URL;
+const isProduction = process.env.NODE_ENV === "production";
+
+if (isProduction) {
 	throw new Error(
-		"NEXT_PUBLIC_STATIC_UUID environment variable must be defined"
+		"Database seeding is disabled in production to prevent accidental data loss."
 	);
 }
 
-async function main() {
-	// Create QR Code directory if it doesn't exist
+if (!staticUuid) {
+	throw new Error(
+		"NEXT_PUBLIC_STATIC_UUID environment variable must be defined for QR generation."
+	);
+}
+const resolvedStaticUuid: string = staticUuid;
+
+if (!baseUrl) {
+	throw new Error(
+		"NEXTAUTH_URL environment variable must be defined to generate QR codes."
+	);
+}
+const resolvedBaseUrl: string = baseUrl;
+
+type SeededCredential = {
+	role: Role;
+	username: string;
+	password?: string;
+	source: string;
+};
+
+const resolvePassword = (
+	envKey: string
+): { password: string; fromEnv: boolean } => {
+	const envPassword = process.env[envKey];
+	if (envPassword) {
+		return { password: envPassword, fromEnv: true };
+	}
+
+	return {
+		password: crypto.randomBytes(18).toString("base64url"),
+		fromEnv: false,
+	};
+};
+
+async function ensureQrCode() {
 	const qrCodeDir = path.join(process.cwd(), "public", "qrcodes");
 	if (!fs.existsSync(qrCodeDir)) {
 		fs.mkdirSync(qrCodeDir, { recursive: true });
 	}
 
-	// Generate QR Code
+	const normalizedBaseUrl = resolvedBaseUrl.endsWith("/")
+		? resolvedBaseUrl.slice(0, -1)
+		: resolvedBaseUrl;
 	const qrCodePath = path.join(qrCodeDir, "pst-qrcode.png");
-	const qrCodeUrl = `${process.env.NEXT_PUBLIC_AUTH_URL}/visitor-form/${staticUuid}`;
+	const qrCodeUrl = `${normalizedBaseUrl}/visitor-form/${resolvedStaticUuid}`;
 
 	await QRCode.toFile(qrCodePath, qrCodeUrl, {
 		color: {
@@ -33,14 +73,13 @@ async function main() {
 		margin: 1,
 	});
 
-	// Save QR Code info to database
 	const qrCode = await prisma.qRCode.upsert({
-		where: { staticUuid },
+		where: { staticUuid: resolvedStaticUuid },
 		update: {
 			path: `/qrcodes/pst-qrcode.png`,
 		},
 		create: {
-			staticUuid,
+			staticUuid: resolvedStaticUuid,
 			path: `/qrcodes/pst-qrcode.png`,
 		},
 	});
@@ -48,48 +87,72 @@ async function main() {
 	console.log(
 		`QR Code created at ${qrCodePath}, with UUID: ${qrCode.staticUuid}`
 	);
+}
 
-	// Create superadmin user
-	const hashedPassword = await bcryptjs.hash("superadmin", 10);
-	const superadmin = await prisma.user.upsert({
-		where: { username: "superadmin" },
+async function seedUsers(): Promise<SeededCredential[]> {
+	const credentials: SeededCredential[] = [];
+
+	const adminUsername = process.env.SEED_ADMIN_USERNAME || "admin";
+	const { password: adminPassword, fromEnv: adminFromEnv } = resolvePassword(
+		"SEED_ADMIN_PASSWORD"
+	);
+	const adminHashedPassword = await bcryptjs.hash(adminPassword, 12);
+
+	const admin = await prisma.user.upsert({
+		where: { username: adminUsername },
 		update: {
-			password: hashedPassword,
+			password: adminHashedPassword,
+			name: "Admin",
+			role: Role.SUPERADMIN,
 		},
 		create: {
-			username: "superadmin",
-			password: hashedPassword,
-			name: "Super Admin",
+			username: adminUsername,
+			password: adminHashedPassword,
+			name: "Admin",
 			role: Role.SUPERADMIN,
 		},
 	});
 
-	console.log(`Created superadmin user: ${superadmin.username}`);
+	credentials.push({
+		role: Role.SUPERADMIN,
+		username: admin.username,
+		password: adminFromEnv ? undefined : adminPassword,
+		source: adminFromEnv ? "SEED_ADMIN_PASSWORD" : "generated",
+	});
 
-	// Create regular admin users (11 admins as specified)
-	const adminUsers = [];
-	for (let i = 1; i <= 11; i++) {
-		const username = `admin${i}`;
-		const hashedAdminPassword = await bcryptjs.hash(username, 10);
+	const operatorUsername = process.env.SEED_OPERATOR_USERNAME || "petugas";
+	const {
+		password: operatorPassword,
+		fromEnv: operatorFromEnv,
+	} = resolvePassword("SEED_OPERATOR_PASSWORD");
+	const operatorHashedPassword = await bcryptjs.hash(operatorPassword, 12);
 
-		const admin = await prisma.user.upsert({
-			where: { username },
-			update: {
-				password: hashedAdminPassword,
-			},
-			create: {
-				username,
-				password: hashedAdminPassword,
-				name: `Admin ${i}`,
-				role: Role.ADMIN,
-			},
-		});
+	const operator = await prisma.user.upsert({
+		where: { username: operatorUsername },
+		update: {
+			password: operatorHashedPassword,
+			name: "Petugas PST",
+			role: Role.ADMIN,
+		},
+		create: {
+			username: operatorUsername,
+			password: operatorHashedPassword,
+			name: "Petugas PST",
+			role: Role.ADMIN,
+		},
+	});
 
-		adminUsers.push(admin);
-		console.log(`Created admin user: ${admin.username}`);
-	}
+	credentials.push({
+		role: Role.ADMIN,
+		username: operator.username,
+		password: operatorFromEnv ? undefined : operatorPassword,
+		source: operatorFromEnv ? "SEED_OPERATOR_PASSWORD" : "generated",
+	});
 
-	// Create initial services
+	return credentials;
+}
+
+async function seedServices() {
 	const services = [
 		{ name: "Perpustakaan", status: ServiceStatus.ACTIVE },
 		{ name: "Konsultasi Statistik", status: ServiceStatus.ACTIVE },
@@ -97,13 +160,11 @@ async function main() {
 	];
 
 	for (const serviceData of services) {
-		// First, check if a service with this name already exists
 		const existingService = await prisma.service.findFirst({
 			where: { name: serviceData.name },
 		});
 
 		if (existingService) {
-			// Update existing service
 			const service = await prisma.service.update({
 				where: { id: existingService.id },
 				data: {
@@ -115,7 +176,6 @@ async function main() {
 			});
 			console.log(`Updated service: ${service.name}`);
 		} else {
-			// Create new service
 			const service = await prisma.service.create({
 				data: {
 					name: serviceData.name,
@@ -127,6 +187,31 @@ async function main() {
 			});
 			console.log(`Created service: ${service.name}`);
 		}
+	}
+}
+
+async function main() {
+	await ensureQrCode();
+	const seededCredentials = await seedUsers();
+	await seedServices();
+
+	const generatedCreds = seededCredentials.filter(
+		(cred) => typeof cred.password === "string"
+	);
+
+	if (generatedCreds.length > 0) {
+		console.log(
+			"Generated development credentials (store them securely if you keep this data):"
+		);
+		generatedCreds.forEach((cred) => {
+			console.log(
+				`- ${cred.role}: username=${cred.username}, password=${cred.password}`
+			);
+		});
+	} else {
+		console.log(
+			"Seeded users with passwords supplied via environment variables (not logged)."
+		);
 	}
 
 	console.log("Database seeding completed successfully!");

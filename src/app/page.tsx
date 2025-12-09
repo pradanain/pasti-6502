@@ -8,11 +8,13 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { ArrowRight, Eye, EyeOff, Loader2, LockKeyhole, ShieldCheck, Sparkles, UserRound } from "lucide-react";
 
 const loginSchema = z.object({
   username: z.string().min(1, "Username harus diisi"),
@@ -23,6 +25,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const form = useForm<LoginFormValues>({
@@ -59,61 +62,142 @@ export default function Home() {
   }
 
   return (
-    <div className="relative flex justify-center items-center bg-background w-full h-screen">
-      {/* Theme toggle button at top right */}
-      <div className="top-4 right-4 z-10 absolute">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#FFF4EC] via-white to-[#FFE5D3] dark:from-background dark:via-[#1f1f1f] dark:to-background">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(247,144,57,0.16),transparent_35%),radial-gradient(circle_at_80%_0%,rgba(154,5,1,0.12),transparent_30%)]" />
+      <div className="absolute -left-16 top-24 h-52 w-52 rounded-full bg-primary/10 blur-3xl" />
+      <div className="absolute -right-10 bottom-12 h-64 w-64 rounded-full bg-secondary/20 blur-3xl" />
+
+      <div className="absolute right-6 top-6 z-20">
         <ThemeToggle />
       </div>
-      <div className="px-4 w-full max-w-md">
-        <Card className="shadow-lg">
-          <CardHeader className="space-y-1 text-center">
-            <CardTitle className="font-bold text-primary text-2xl">Sistem Antrean PST</CardTitle>
-            <CardDescription>
-              Badan Pusat Statistik Kabupaten Buton Selatan
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="username"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Username</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Masukkan username" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input type="password" placeholder="Masukkan password" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button type="submit" className="w-full font-bold text-[#fff]" disabled={isLoading}>
-                  {isLoading ? "Logging in..." : "Login"}
-                </Button>
-              </form>
-            </Form>
-          </CardContent>
-          <CardFooter className="flex flex-col items-center space-y-3">
-            <p className="text-muted-foreground text-sm">Silakan login untuk mengakses sistem</p>
-            <Button variant="link" className="text-primary underline" onClick={() => router.push('/queue-display')}>
-              Lihat Tampilan Antrean
-            </Button>
-          </CardFooter>
-        </Card>
+
+      <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-10 px-4 py-12 lg:flex-row lg:items-center">
+        <div className="space-y-6 lg:flex-1">
+          <Badge variant="secondary" className="border-border/60 bg-white/70 text-primary-color shadow-sm backdrop-blur">
+            <Sparkles className="h-4 w-4" />
+            Sistem Antrean PST
+          </Badge>
+          <div className="space-y-3">
+            <h1 className="text-3xl font-black leading-tight text-primary-color sm:text-4xl">
+              Masuk ke Dashboard Pelayanan Statistik Terpadu
+            </h1>
+            <p className="max-w-2xl text-base text-secondary-color sm:text-lg">
+              Kelola antrean, layanan, dan admin dengan pengalaman modern yang lebih ramah pengguna. Login untuk
+              memulai bekerja.
+            </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="flex items-start gap-3 rounded-xl border border-custom bg-white/70 p-4 shadow-sm backdrop-blur dark:bg-card">
+              <div className="rounded-full bg-primary/10 p-2 text-primary">
+                <ShieldCheck className="h-4 w-4" />
+              </div>
+              <div className="space-y-1">
+                <p className="font-semibold text-primary-color">Keamanan terjaga</p>
+                <p className="text-sm text-secondary-color">Autentikasi kredensial terenkripsi dan terintegrasi.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 rounded-xl border border-custom bg-white/70 p-4 shadow-sm backdrop-blur dark:bg-card">
+              <div className="rounded-full bg-accent/10 p-2 text-accent">
+                <Sparkles className="h-4 w-4" />
+              </div>
+              <div className="space-y-1">
+                <p className="font-semibold text-primary-color">Antarmuka modern</p>
+                <p className="text-sm text-secondary-color">Form ringan dengan indikator, ikon, dan status yang jelas.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="w-full lg:flex-1">
+          <Card className="border border-custom/80 bg-white/80 shadow-xl backdrop-blur dark:bg-card">
+            <CardHeader className="space-y-1 text-center">
+              <CardTitle className="text-2xl font-bold text-primary-color">Login Admin</CardTitle>
+              <p className="text-secondary-color text-sm">Masukkan kredensial untuk mengakses dashboard.</p>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="username"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Username</FormLabel>
+                        <div className="relative">
+                          <UserRound className="text-secondary-color absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
+                          <FormControl>
+                            <Input
+                              placeholder="contoh: adminpst"
+                              className="pl-9"
+                              autoComplete="username"
+                              {...field}
+                            />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Password</FormLabel>
+                        <div className="relative">
+                          <LockKeyhole className="text-secondary-color absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
+                          <FormControl>
+                            <Input
+                              type={showPassword ? "text" : "password"}
+                              placeholder="Masukkan password"
+                              className="pl-9 pr-12"
+                              autoComplete="current-password"
+                              {...field}
+                            />
+                          </FormControl>
+                          <button
+                            type="button"
+                            className="text-secondary-color absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 transition hover:text-primary"
+                            onClick={() => setShowPassword((prev) => !prev)}
+                            aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
+                          >
+                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </button>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button
+                    type="submit"
+                    className="w-full gap-2 bg-primary text-primary-foreground shadow-md hover:bg-primary/90"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                    {isLoading ? "Memproses..." : "Masuk ke Dashboard"}
+                  </Button>
+                </form>
+              </Form>
+
+              <div className="flex items-center justify-between rounded-lg border border-dashed border-border/80 bg-muted/40 px-4 py-3 text-sm text-secondary-color">
+                <div className="space-y-1">
+                  <p className="font-semibold text-primary-color">Hanya untuk admin</p>
+                  <p>Pastikan Anda menggunakan akun yang telah terdaftar.</p>
+                </div>
+                <ArrowRight className="h-4 w-4 text-primary" />
+              </div>
+
+              <Button
+                variant="outline"
+                className="w-full gap-2 border-border"
+                onClick={() => router.push("/queue-display")}
+              >
+                Lihat Tampilan Antrean
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );

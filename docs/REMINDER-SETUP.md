@@ -26,12 +26,12 @@ Untuk mengaktifkan semua fitur pengiriman pesan, atur variabel lingkungan beriku
 ### WhatsApp Bot
 
 ```
-NEXT_PUBLIC_WA_API_URL=http://localhost:3015
-NEXT_PUBLIC_WA_ADMIN_KEY=buselkab-bps-admin
+NEXT_PUBLIC_WA_API_URL=https://pasti.databenuanta.id/wa-api
+WA_ADMIN_KEY=buselkab-bps-admin
 ```
 
 - `NEXT_PUBLIC_WA_API_URL`: URL API WhatsApp Bot
-- `NEXT_PUBLIC_WA_ADMIN_KEY`: Kunci administrator untuk mengakses API
+- `WA_ADMIN_KEY`: Kunci administrator untuk mengakses API (hanya disimpan di server)
 
 ## Penggunaan Tiap Metode
 
@@ -76,4 +76,4 @@ Untuk menggunakan WhatsApp Bot secara penuh, Anda perlu mengatur Cloud API:
 
 Jika muncul pesan "Anda perlu mengatur variable di env", pastikan Anda telah mengatur variabel lingkungan yang diperlukan di file `.env` sesuai dengan petunjuk di atas.
 
-Untuk WhatsApp Bot, pastikan layanan API WhatsApp Bot telah berjalan di alamat yang ditentukan dalam variabel `NEXT_PUBLIC_WA_API_URL`.
+Untuk WhatsApp Bot, pastikan layanan API WhatsApp Bot telah berjalan di alamat yang ditentukan dalam variabel `NEXT_PUBLIC_WA_API_URL` dan kunci `WA_ADMIN_KEY` aman di server.

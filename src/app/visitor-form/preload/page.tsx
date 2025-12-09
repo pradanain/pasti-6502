@@ -63,7 +63,7 @@ export default function VisitorFormPreloadPage() {
                 <CardHeader className="text-center">
                     <CardTitle className="text-primary">Memuat Data Antrean</CardTitle>
                     <CardDescription>
-                        Badan Pusat Statistik Kabupaten Buton Selatan
+                        Badan Pusat Statistik Kabupaten Bulungan
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col justify-center items-center space-y-6 py-8">

@@ -13,7 +13,7 @@ import { QueueStatus, Role } from "@/generated/prisma";
 import { formatDistance } from "date-fns";
 import { id } from "date-fns/locale";
 import { RefreshCw, Smartphone, AlertCircle, MessageSquareText } from "lucide-react";
-import { sendWhatsAppDirectReminder, sendWhatsAppBotReminder } from "@/lib/reminder-service";
+import { sendWhatsAppDirectReminder, sendWhatsAppBotReminder } from "@/lib/reminder-client";
 import TableSkeleton from "@/components/ui/table-skeleton";
 import QueueManagementSkeleton from "@/components/ui/queue-management-skeleton";
 import { Label } from "@/components/ui/label";
@@ -239,7 +239,7 @@ export default function QueueManagementPage() {
     const handleRemindSKD = (queue: Queue) => {
         setSelectedQueue(queue);
         setReminderMessage(
-            `Halo ${queue.visitor.name}, mohon kesediaannya untuk mengisi Survei Kebutuhan Data (SKD) 2025 BPS Buton Selatan melalui link berikut: s.bps.go.id/skd2025_bpsbusel`
+            `Halo ${queue.visitor.name}, mohon kesediaannya untuk mengisi Survei Kebutuhan Data (SKD) 2025 BPS Bulungan melalui link berikut: s.bps.go.id/skd2025_bpsbusel`
         );
         setShowRemindSkdDialog(true);
     };

@@ -14,24 +14,57 @@ export async function GET(req: NextRequest) {
 		}
 
 		const { searchParams } = new URL(req.url);
-		const startDateParam =
-			searchParams.get("startDate") || format(new Date(), "yyyy-MM-dd");
+		const todayString = format(new Date(), "yyyy-MM-dd");
+		const startDateParam = searchParams.get("startDate") || todayString;
+		const endDateParam = searchParams.get("endDate") || startDateParam;
+		const maxRangeDays = 31;
 
 		// Parse the start date
 		const startDate = new Date(startDateParam); // parseISO works with YYYY-MM-DD format
 		startDate.setHours(0, 0, 0, 0);
+		const endDate = new Date(endDateParam);
+		endDate.setHours(0, 0, 0, 0);
+		endDate.setDate(endDate.getDate() + 1);
+
+		if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
+			return NextResponse.json(
+				{ error: "Tanggal tidak valid, gunakan format YYYY-MM-DD" },
+				{ status: 400 }
+			);
+		}
+
+		const diffDays =
+			(endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+		if (diffDays > maxRangeDays) {
+			return NextResponse.json(
+				{
+					error: `Rentang tanggal terlalu besar. Maksimal ${maxRangeDays} hari.`,
+				},
+				{ status: 400 }
+			);
+		}
 
 		// Get all queues within the date range
 		const queues = await prisma.queue.findMany({
 			where: {
 				createdAt: {
 					gte: startDate,
+					lt: endDate,
 				},
 			},
-			include: {
-				visitor: true,
-				service: true,
-				admin: true, // Use the correct relation name as defined in your Prisma schema
+			select: {
+				status: true,
+				queueType: true,
+				serviceId: true,
+				createdAt: true,
+				startTime: true,
+				endTime: true,
+				admin: {
+					select: {
+						id: true,
+						name: true,
+					},
+				},
 			},
 		});
 
@@ -127,6 +160,7 @@ export async function GET(req: NextRequest) {
 					some: {
 						createdAt: {
 							gte: startDate,
+							lt: endDate,
 						},
 					},
 				},
@@ -239,7 +273,7 @@ export async function GET(req: NextRequest) {
 			dailyTrends,
 		});
 	} catch (error) {
-		console.error("Error fetching analytics data:", error);
+		console.error("Error fetching analytics data", error);
 		return NextResponse.json(
 			{ error: "Failed to fetch analytics data" },
 			{ status: 500 }
